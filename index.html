@@ -183,11 +183,15 @@ Error message and password prompt
 
 <li>$:/themes/tiddlywiki/vanilla/options/sidebarlayout</li>
 
+<li>ActionScript</li>
+
 <li>Draft of 'NexusMods'</li>
 
 <li>NexusMods</li>
 
 <li>Quest Lookup - Hide Your Quests</li>
+
+<li>Quest Lookup - Text Substitution</li>
 
 </ul>
 </p>
@@ -10070,8 +10074,10 @@ Error message and password prompt
     }
 }</pre>
 </div>
-<div created="20210520062052896" modified="20210520064943014" title="$:/DefaultTiddlers">
-<pre>NexusMods</pre>
+<div created="20210520062052896" modified="20210520165744855" title="$:/DefaultTiddlers">
+<pre>[[Quest Lookup - Text Substitution]]
+[[Quest Lookup - Hide Your Quests]]
+NexusMods</pre>
 </div>
 <div title="$:/isEncrypted">
 <pre>no</pre>
@@ -10112,7 +10118,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210520065624132" list="$:/ControlPanel NexusMods" modified="20210520065624132" title="$:/StoryList">
+<div created="20210520165801811" list="[[Quest Lookup - Text Substitution]] [[Quest Lookup - Hide Your Quests]] NexusMods" modified="20210520165801811" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210520062246540" modified="20210520062514003" title="$:/theme">
@@ -10230,11 +10236,16 @@ Error message and password prompt
 <div created="20210520062549112" modified="20210520062611198" title="$:/themes/tiddlywiki/vanilla/options/sidebarlayout">
 <pre>fluid-fixed</pre>
 </div>
+<div created="20210520165809165" modified="20210520165950562" title="ActionScript">
+<pre>ActionScript is now an outdated piece of technology associated with Flash. Skyrim was released in 2011, nearing the end of Flash's life, so we need to know something about this tool to do anything with the UI in the game.</pre>
+</div>
 <div modified="20210520064430486" title="Draft of 'NexusMods'">
 <pre></pre>
 </div>
-<div created="20210520063404809" modified="20210520064725447" tags="NexusMods Portfolio" title="NexusMods">
-<pre>[ext[NPC Lookup|https://www.nexusmods.com/skyrimspecialedition/mods/43097]]
+<div created="20210520063404809" modified="20210520170016499" tags="NexusMods Portfolio" title="NexusMods">
+<pre>NexusMods is the main platform where I release all of my mods. Check them out!:
+
+[ext[NPC Lookup|https://www.nexusmods.com/skyrimspecialedition/mods/43097]]
 
 [ext[SkyPal|https://www.nexusmods.com/skyrimspecialedition/mods/43925]]
 
@@ -10242,8 +10253,11 @@ Error message and password prompt
 
 [ext[Fix Blank Names|https://www.nexusmods.com/skyrimspecialedition/mods/49768]]</pre>
 </div>
-<div created="20210520063058438" modified="20210520063421777" tags="[[Quest Lookup]] NexusMods" title="Quest Lookup - Hide Your Quests">
+<div created="20210520063058438" modified="20210520170032802" tags="[[Quest Lookup]] NexusMods Portfolio" title="Quest Lookup - Hide Your Quests">
 <pre>Well, off to another project. This one was requested by a user on NexusMods by the name of Ellewyn. After helping me with my previous project Fix Blank Names, I felt the call to assist him/her with the skills I've picked up creating SKSE plugins and to remake a mod that has been left outdated for a couple of years. The mod is beloved by quite a few members in the Nexus community, yet it's holding them back from being able to update their games and to use the latest versions of other mods that are essentially must-haves. Because I have the setup and the foundation to get a quick replacement going, this past week I've been putting all my programming into getting out a prototype which I've only just succeeded in doing today. It's something of a challenge because of the break-neck speed I'm going to produce this mod. I believe that Skylib has matured such that I can just depend on it to get a new plugin going pretty quickly these days, which is an amazing difference compared to a month or so ago. The primary reason I'm going so fast is because I've an obligation to push out another mod, which is the most difficult of them all. I'm trying to bring NPC Party out of beta, which is in a similar boat compared to this current mod I'm remaking from scratch. The only difference is in the level of comprehensiveness. After this two week period of taking a break from NPC Party, I expect to get right back into and focus on getting it out of beta. This new experience I've picked up, and the extremely important bug fixes that have been introduced into Skylib due to the recent foray, should really help me press forward into getting NPC Party done.</pre>
+</div>
+<div created="20210520165056733" modified="20210520170040394" tags="[[Quest Lookup]] NexusMods Portfolio" title="Quest Lookup - Text Substitution">
+<pre>The first real snag in Quest Lookup has reared its ugly head. Essentially, text substitution needs to be done before handing off string to ActionScript for further processing. It makes sense, but I have no idea where the function that handles substitution would be located. I could go through the laborious process of trying to find it, as there is probably a non-virtual method on Quest_t that handles it, perhaps even Quest_Objective_t, but I think I can get something working faster if I just create my own function to handle it for objectives in particular, an not worry about all the other places substitution can occur at this time (e.g. books). The biggest hurdle to doing it myself is I don't yet know how to handle other languages such as Russian when it comes to replacing pronouns. At this time, I think that I will simply replace pronoun tags when English is the current language and leave pronoun tags alone else wise. It's the only course of action that I can follow at the moment and know that I can get some results relatively quickly.</pre>
 </div>
 
 
