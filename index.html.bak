@@ -10219,7 +10219,11 @@ NexusMods</pre>
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
+<<<<<<< HEAD
 <div list="[[Quest Lookup - Text Replacement Mostly Done]] [[Quest Lookup - Tag Reader]] [[Quest Lookup - Text Substitution]] [[Quest Lookup - Hide Your Quests]] NexusMods" title="$:/StoryList">
+=======
+<div created="20210521062857838" list="[[Quest Lookup - Text Replacement Mostly Done]] [[Quest Lookup - Tag Reader]] [[Quest Lookup - Text Substitution]] [[Quest Lookup - Hide Your Quests]] NexusMods" modified="20210521062857838" title="$:/StoryList">
+>>>>>>> 6f62316ab9123d5dcb50521c3e08bc6bb0109980
 <pre></pre>
 </div>
 <div created="20210520062246540" modified="20210520062514003" title="$:/theme">
@@ -10354,16 +10358,24 @@ NexusMods</pre>
 <div created="20210520063058438" modified="20210520170032802" tags="[[Quest Lookup]] NexusMods Portfolio" title="Quest Lookup - Hide Your Quests">
 <pre>Well, off to another project. This one was requested by a user on NexusMods by the name of Ellewyn. After helping me with my previous project Fix Blank Names, I felt the call to assist him/her with the skills I've picked up creating SKSE plugins and to remake a mod that has been left outdated for a couple of years. The mod is beloved by quite a few members in the Nexus community, yet it's holding them back from being able to update their games and to use the latest versions of other mods that are essentially must-haves. Because I have the setup and the foundation to get a quick replacement going, this past week I've been putting all my programming into getting out a prototype which I've only just succeeded in doing today. It's something of a challenge because of the break-neck speed I'm going to produce this mod. I believe that Skylib has matured such that I can just depend on it to get a new plugin going pretty quickly these days, which is an amazing difference compared to a month or so ago. The primary reason I'm going so fast is because I've an obligation to push out another mod, which is the most difficult of them all. I'm trying to bring NPC Party out of beta, which is in a similar boat compared to this current mod I'm remaking from scratch. The only difference is in the level of comprehensiveness. After this two week period of taking a break from NPC Party, I expect to get right back into and focus on getting it out of beta. This new experience I've picked up, and the extremely important bug fixes that have been introduced into Skylib due to the recent foray, should really help me press forward into getting NPC Party done.</pre>
 </div>
+<<<<<<< HEAD
 <div created="20210520194451709" modified="20210521073317625" tags="NexusMods Portfolio [[Quest Lookup]]" title="Quest Lookup - Tag Reader">
+=======
+<div created="20210520194451709" modified="20210520195154075" tags="NexusMods Portfolio [[Quest Lookup]]" title="Quest Lookup - Tag Reader">
+>>>>>>> 6f62316ab9123d5dcb50521c3e08bc6bb0109980
 <pre>It feels good to write more C like code for a change. I believe it's most appropriate in this case:
 
 ```cpp
 
+<<<<<<< HEAD
         static auto Read = [](const char* src,
                               size_t&amp; idx,
                               std::string&amp; tag,
                               std::string&amp; sub,
                               std::string&amp; val)-&gt;Bool_t
+=======
+        static auto Read = [](const char* src, size_t&amp; idx, std::string&amp; tag, std::string&amp; sub, std::string&amp; val)-&gt;Bool_t
+>>>>>>> 6f62316ab9123d5dcb50521c3e08bc6bb0109980
         {
             SKYLIB_ASSERT(src[idx] == '&lt;');
 
@@ -10390,11 +10402,14 @@ NexusMods</pre>
 
             if (src[idx] == '.') {
                 idx += 1;
+<<<<<<< HEAD
                 if (src[idx] == '=') {
                     idx = idx_orig;
                     return false;
                 }
 
+=======
+>>>>>>> 6f62316ab9123d5dcb50521c3e08bc6bb0109980
                 while (src[idx] != '=') {
                     if (!src[idx]) {
                         idx = idx_orig;
@@ -10411,11 +10426,14 @@ NexusMods</pre>
             SKYLIB_ASSERT(src[idx] == '=');
 
             idx += 1;
+<<<<<<< HEAD
             if (src[idx] == '&gt;') {
                 idx = idx_orig;
                 return false;
             }
 
+=======
+>>>>>>> 6f62316ab9123d5dcb50521c3e08bc6bb0109980
             while (src[idx] != '&gt;') {
                 if (!src[idx]) {
                     idx = idx_orig;
