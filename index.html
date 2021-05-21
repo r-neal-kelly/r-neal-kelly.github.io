@@ -203,6 +203,8 @@ Error message and password prompt
 
 <li>Quest Lookup - Tag Reader</li>
 
+<li>Quest Lookup - Text Replacement Mostly Done</li>
+
 <li>Quest Lookup - Text Substitution</li>
 
 </ul>
@@ -10089,8 +10091,9 @@ Error message and password prompt
     }
 }</pre>
 </div>
-<div created="20210520062052896" modified="20210520195216417" title="$:/DefaultTiddlers">
-<pre>[[Quest Lookup - Tag Reader]]
+<div created="20210520062052896" modified="20210521062908762" title="$:/DefaultTiddlers">
+<pre>[[Quest Lookup - Text Replacement Mostly Done]]
+[[Quest Lookup - Tag Reader]]
 [[Quest Lookup - Text Substitution]]
 [[Quest Lookup - Hide Your Quests]]
 NexusMods</pre>
@@ -10216,7 +10219,7 @@ NexusMods</pre>
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210520194430612" list="[[Quest Lookup - Tag Reader]] [[Quest Lookup - Text Substitution]] [[Quest Lookup - Hide Your Quests]] NexusMods" modified="20210520195203387" title="$:/StoryList">
+<div created="20210521062857838" list="[[Quest Lookup - Text Replacement Mostly Done]] [[Quest Lookup - Tag Reader]] [[Quest Lookup - Text Substitution]] [[Quest Lookup - Hide Your Quests]] NexusMods" modified="20210521062857838" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210520062246540" modified="20210520062514003" title="$:/theme">
@@ -10426,6 +10429,9 @@ Given: &quot;Return the &lt;Alias=QuestItem&gt; to &lt;Alias.ShortName=QuestGive
 ```
 
 I still need to write the part that fetches the string to replace the tag with. Coming soon!</pre>
+</div>
+<div created="20210521062628505" modified="20210521062843824" tags="NexusMods Portfolio [[Quest Lookup]]" title="Quest Lookup - Text Replacement Mostly Done">
+<pre>Whew, what a day. That was quite a bit of work to get most of the text replacement working for Player_Objective_ts. The only thing we didn't get done is the calendar Global sub types. I've not found an instance of that being used, so I'm not sure how to interpret the data correctly. Better to not do it at all than have some wrong data being passed. Tired.</pre>
 </div>
 <div created="20210520165056733" modified="20210520170040394" tags="[[Quest Lookup]] NexusMods Portfolio" title="Quest Lookup - Text Substitution">
 <pre>The first real snag in Quest Lookup has reared its ugly head. Essentially, text substitution needs to be done before handing off string to ActionScript for further processing. It makes sense, but I have no idea where the function that handles substitution would be located. I could go through the laborious process of trying to find it, as there is probably a non-virtual method on Quest_t that handles it, perhaps even Quest_Objective_t, but I think I can get something working faster if I just create my own function to handle it for objectives in particular, an not worry about all the other places substitution can occur at this time (e.g. books). The biggest hurdle to doing it myself is I don't yet know how to handle other languages such as Russian when it comes to replacing pronouns. At this time, I think that I will simply replace pronoun tags when English is the current language and leave pronoun tags alone else wise. It's the only course of action that I can follow at the moment and know that I can get some results relatively quickly.</pre>
