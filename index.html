@@ -251,6 +251,8 @@ Error message and password prompt
 
 <li>Christian Movies</li>
 
+<li>Data Oriented Programming</li>
+
 <li>Debate - Are You Delusional for Believing in God?</li>
 
 <li>Dendron</li>
@@ -10624,7 +10626,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210525054231894" list="[[Purple Skies - The Ultimate Synthwave Mix]] Beethoven [[Brown Noise]] Synthwave [[Is It Legal to Embed YouTube Videos?]] [[The Cervera Codex]] Neal [[Dennis Ritchie]] Autism NexusMods" modified="20210525054526728" title="$:/StoryList">
+<div created="20210525054231894" list="[[The C Programming Language]] [[Data Oriented Programming]] [[Purple Skies - The Ultimate Synthwave Mix]] [[Brown Noise]] Synthwave [[Is It Legal to Embed YouTube Videos?]] [[The Cervera Codex]] Neal [[Dennis Ritchie]] Autism NexusMods" modified="20210525055202285" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210520062246540" modified="20210520062514003" title="$:/theme">
@@ -10834,6 +10836,13 @@ I'm afraid Ben has gone done a dark path as of late. It's actually hard to keep 
 
 [[The Gospel of Mark Visual Bible|https://www.youtube.com/watch?v=BcdgY7V4jZ4]]
 </pre>
+</div>
+<div created="20210525055211281" modified="20210525062626723" tags="Programming" title="Data Oriented Programming">
+<pre>An approach to programming that focuses on data. Primarily useful for writing efficient and performant programs. It makes sense that you would want to work with your actual data at the forefront of your code, and to understand the kind of data you'll be operating on before even writing a single function. One of the pillars of data oriented programming is to get rid of as many middle men as is reasonably possible in order to solve your real-world problem, as opposed to dealing with the imaginary constraints that may be forced upon you by your programming environment.
+
+For example, most scripting languages only come with dynamic arrays. But if you can guarantee that an array will always be a certain size, why bother using a dynamic array instead of a static one? Ah but you say, my scripting language is not like the others, I can reserve the capacity of my dynamic array up front. True, that is better. But why would you want to take the pointer hit to the heap every time you want to access your array? Why not keep it on the stack, or in a designated memory address that you know will be keep hot on your cpu's cache? Ah but you say, that's too specific to the computer I'm building the program on, it's not generic enough. But how generic do you //really// need to be? If you know the exact number and kind of cpus you'll be running on, why would you program for anything else? Ah but you say, I need to be able to reuse this program indefinitely and I don't know what kind of cpus I'll need to run it on in the future. Really? You sure you won't be rewriting most of your code at that point anyway? What is your track record of recycling code versus rewriting code?
+
+You can keep this line of thought going on and on. It's basically [[Socrates]], but for programming, and in no means is it meant to offend. Rather it's intended to be introspective such that you regularly question what you're doing with the computer, so that you know whether or not it's actually getting you closer to the efficient and performant solution you need. No one likes a sluggish program that could have been lightning fast.</pre>
 </div>
 <div created="20210524033943780" modified="20210524115956816" tags="Christian Debate Apologist Apology" title="Debate - Are You Delusional for Believing in God?">
 <pre>This was a pretty good debate. I really like the style of it. [[William Lane Craig]], one of the [[Christian]] [[Apologists]], stated in an interview years later that he considers this his favorite debate he participated in:
@@ -11137,7 +11146,7 @@ The Form_ID_t ([[.h|https://github.com/r-neal-kelly/doticu-skylib/blob/master/So
 <div created="20210524072936979" modified="20210524073532201" tags="Codex Bible Archive.org Hebrew" title="The Aleppo Codex">
 <pre>An important resource available on Archive.org, [[here|https://archive.org/details/Aleppo_Codex]] and [[here|https://archive.org/details/Aleppo_Codex_direct_scan/page/n219/mode/2up]]. This is one of the oldest extant versions of the Hebrew Bible, although it was seriously damaged in a fire in the last century. [[The Leningrad Codex]] has taken its place in matters of Scriptural importance where applicable. Although that says nothing of the ancient [[Paleo Hebrew]] manuscripts found among the [[Dead Sea Scrolls]].</pre>
 </div>
-<div created="20210524014254676" modified="20210524120809755" tags="Programming C [[Dennis Ritchie]] Unix Video" title="The C Programming Language">
+<div created="20210524014254676" modified="20210525055054805" tags="Programming C [[Dennis Ritchie]] Unix Video" title="The C Programming Language">
 <pre>After I had become extremely comfortable with [[JavaScript]], [[NodeJS]], and [[Electron]], I found that I wanted more control and more efficiency for the projects I was creating. So of course, the obvious next step was a compiled language, and in particular the primary language used to create [[JavaScript]], that being [[C++]]. But what was not obvious to me at the time was just how many pitfalls I would end up stumbling into with this monolithic language. I found myself cycling through ways of structuring my program, never really making progress, just trying to do it in the &quot;right&quot; way but never succeeding. After becoming discouraged from failing to settle on a sure way, and the exhaustion of rewriting my code so many times, I almost gave up on compiled languages for good. But for some reason, I decided to toy around with [[C]] as an exercise in curious futility, almost shamefully so because I knew, as every modern programmer does, that this old dusty language isn't good for much of anything anymore.
 
 I now consider it the best decision I ever made in programming. I fell in love with the language immediately, and for good reason. But if you are like how I was at the time, and think that [[C]] can't be much different from [[C++]], you might be as surprised as I was to learn that that's not the case at all. [[C]] forces you to think about what you and your computer are doing. It has a generic interface that essentially maps to any [[Turing Machine]], so it doesn't bug you with too many of the specifics of the computer like you would have to deal with in [[Assembly]], but at the same time it also does very little to encapsulate (read &quot;hide&quot;) data from you. With [[Data Oriented Programming]] being the good idea that it is, you will find that [[C]] puts you in an excellent position to create some of the best programs you can possibly write.
@@ -11146,7 +11155,7 @@ Whereas [[C++]] with it objects and templates conflates data with functions in a
 
 If you are interested in learning [[C]], the first thing that you should build is your own vector (or more properly, a dynamic array). You're going to need it, because [[C]] doesn't provide one for you. You may be pleasantly surprised that it's quite easy to make one that is faster than std::vector. And it's a //great// learning experience. Next, you will want to create your own hash map. Don't be trepid, it's easy to copy a hash algorithm online, [[FNV-1a]] can be written in five or so lines. The tough part is understanding what a hash map actually is, and that there are two general types, and that one type is //way// faster than the other. Hint: The fast one uses a vector instead of a linked list. And speaking of linked lists, you should build that as well. Compare it to your vector and try building another hash map that uses it instead of the vector.
 
-By that point, you'll pretty much have everything you need to do most generic things you would in a scripting language. You'll have a much better idea of why certain data structures are generally favored over others, and when the unfavorable becomes useful. Before leaving [[C]] for whatever language you go to next, I encourage you to build something non-trivial in this fundamental language. For me, that turned out to be a custom [[Regular Expression]] Engine, capable of look-behinds that are just as fast as look-aheads. It also came with my own custom flavor, which I found to be more sensible and capable of dealing with higher codepoints in the [[Unicode]] chart. I had to build several things that go with it, including my own dynamic string type, and utf-8, utf-16, and utf-32 encoders and decoders.
+By that point, you'll pretty much have everything you need to do most generic things you would in a scripting language. You'll have a much better idea of why certain data structures are generally favored over others, and when the unfavorable structure actually becomes useful. Before leaving [[C]] for whatever language you go to next, I encourage you to build something non-trivial in this fundamental language. For me, that turned out to be a custom [[Regular Expression]] Engine, capable of look-behinds that are just as fast as look-aheads. It also came with my own custom flavor, which I found to be more sensible and capable of dealing with higher codepoints in the [[Unicode]] chart. I had to build several things that go with it, including my own dynamic string type, and utf-8, utf-16, and utf-32 encoders and decoders.
 
 When I look back at my time programming in [[C]], I know that it was time well spent. I remember it fondly. And now when I work in a language like [[C++]], I have a much better idea of what needs to be done and how to do it. And should you stay with [[C]] as your main language, that's great too! The language is still as useful as it has been ever since it was created.
 
