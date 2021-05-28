@@ -183,6 +183,8 @@ Error message and password prompt
 
 <li>$:/neal/video/The UNIX Operating System</li>
 
+<li>$:/neal/youtube_playlist</li>
+
 <li>$:/neal/youtube_video</li>
 
 <li>$:/nexus/banner/Fix Blank Names</li>
@@ -248,6 +250,8 @@ Error message and password prompt
 <li>$:/Series/Listening to Music with Craig Wright/22 - Modernism and Mahler</li>
 
 <li>$:/Series/Listening to Music with Craig Wright/23 - Review of Musical Style</li>
+
+<li>$:/Series/Programming Paradigms with Jerry Cain</li>
 
 <li>$:/SiteSubtitle</li>
 
@@ -10830,6 +10834,11 @@ Error message and password prompt
 <div created="20210526031953912" modified="20210528023647069" tags="Documentary Unix Programming [[Dennis Ritchie]] [[Ken Thompson]] [[Brian Kernighan]]" title="$:/neal/video/The UNIX Operating System" youtube_id="tc4ROCJYbm0">
 <pre>{{||$:/neal/youtube_video}}</pre>
 </div>
+<div created="20210528043124047" modified="20210528043939105" tags="$:/neal" title="$:/neal/youtube_playlist" youtube_playlist="">
+<pre>\define youtube_playlist(playlist) &lt;center&gt;&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/videoseries?list=PL$playlist$&amp;enablejsapi=1&amp;origin=https://r-neal-kelly.github.io/&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;&lt;/center&gt;
+
+&lt;$macrocall $name=&quot;youtube_playlist&quot; playlist={{!!youtube_playlist}} /&gt;</pre>
+</div>
 <div created="20210528000153869" modified="20210528034533137" tags="$:/neal" title="$:/neal/youtube_video" youtube_id="" youtube_start="" youtube_stop="">
 <pre>\define youtube_video(id, start, stop) &lt;center&gt;&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/$id$?start=$start$&amp;end=$stop$&amp;enablejsapi=1&amp;origin=https://r-neal-kelly.github.io/&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;&lt;/center&gt;
 
@@ -12047,6 +12056,9 @@ Error message and password prompt
 <div created="20210527054606987" modified="20210528023036792" tags="$:/" title="$:/Series/Listening to Music with Craig Wright/23 - Review of Musical Style" youtube_id="ScMK-5dwOYM">
 <pre>{{||$:/neal/youtube_video}}</pre>
 </div>
+<div created="20210528042655362" modified="20210528044026324" tags="Programming C Lecture Recommended" title="$:/Series/Programming Paradigms with Jerry Cain" youtube_playlist="F1893D2496823711">
+<pre>{{||$:/neal/youtube_playlist}}</pre>
+</div>
 <div created="20210520061908127" modified="20210520065633463" title="$:/SiteSubtitle">
 <pre>a programmer's blog</pre>
 </div>
@@ -12056,7 +12068,7 @@ Error message and password prompt
 <div created="20210520063033326" modified="20210520063033326" title="$:/state/add-plugin-info/$:/temp/ServerConnection/https://tiddlywiki.com/library/v5.1.23/index.html/$:/temp/RemoteAssetInfo/https://tiddlywiki.com/library/v5.1.23/index.html/$:/plugins/tiddlywiki/codemirror">
 <pre>yes</pre>
 </div>
-<div created="20210521082221364" modified="20210528041221310" title="$:/state/advancedsearch/currentTab">
+<div created="20210521082221364" modified="20210528043056597" title="$:/state/advancedsearch/currentTab">
 <pre>$:/core/ui/AdvancedSearch/Standard</pre>
 </div>
 <div created="20210526145543822" modified="20210526145543822" title="$:/state/edit/references-2014914603">
@@ -12068,7 +12080,7 @@ Error message and password prompt
 <div created="20210520063005271" modified="20210520063005271" title="$:/state/tab--1418380610">
 <pre>$:/core/ui/ControlPanel/Plugins/Add/Plugins</pre>
 </div>
-<div created="20210521082221364" modified="20210528041221311" title="$:/state/tab--1498284803">
+<div created="20210521082221364" modified="20210528043056597" title="$:/state/tab--1498284803">
 <pre>$:/core/ui/AdvancedSearch/Standard</pre>
 </div>
 <div created="20210520062259426" modified="20210520171455489" title="$:/state/tab--1963855381">
@@ -12104,7 +12116,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210528041211559" list="$:/AdvancedSearch" modified="20210528042448076" title="$:/StoryList">
+<div created="20210528041211559" list="[[$:/Series/Programming Paradigms with Jerry Cain]] $:/AdvancedSearch [[The C Programming Language]]" modified="20210528043109877" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210527103745532" modified="20210528022843846" tags="Modern Music Synthwave $:/ [[Astral Throb]]" title="$:/Synthwave/Astral Throb/Awake" youtube_id="1eFxAT_EPOQ">
@@ -13374,7 +13386,7 @@ Top-notch from none other than [[ThePrimeThanatos]]:
 <div created="20210524072936979" modified="20210524073532201" tags="Codex Bible Archive.org Hebrew" title="The Aleppo Codex">
 <pre>An important resource available on Archive.org, [[here|https://archive.org/details/Aleppo_Codex]] and [[here|https://archive.org/details/Aleppo_Codex_direct_scan/page/n219/mode/2up]]. This is one of the oldest extant versions of the Hebrew Bible, although it was seriously damaged in a fire in the last century. [[The Leningrad Codex]] has taken its place in matters of Scriptural importance where applicable. Although that says nothing of the ancient [[Paleo Hebrew]] manuscripts found among the [[Dead Sea Scrolls]].</pre>
 </div>
-<div created="20210524014254676" modified="20210525055054805" tags="Programming C [[Dennis Ritchie]] Unix Video" title="The C Programming Language">
+<div created="20210524014254676" modified="20210528044048074" tags="Programming C [[Dennis Ritchie]] Unix Video" title="The C Programming Language">
 <pre>After I had become extremely comfortable with [[JavaScript]], [[NodeJS]], and [[Electron]], I found that I wanted more control and more efficiency for the projects I was creating. So of course, the obvious next step was a compiled language, and in particular the primary language used to create [[JavaScript]], that being [[C++]]. But what was not obvious to me at the time was just how many pitfalls I would end up stumbling into with this monolithic language. I found myself cycling through ways of structuring my program, never really making progress, just trying to do it in the &quot;right&quot; way but never succeeding. After becoming discouraged from failing to settle on a sure way, and the exhaustion of rewriting my code so many times, I almost gave up on compiled languages for good. But for some reason, I decided to toy around with [[C]] as an exercise in curious futility, almost shamefully so because I knew, as every modern programmer does, that this old dusty language isn't good for much of anything anymore.
 
 I now consider it the best decision I ever made in programming. I fell in love with the language immediately, and for good reason. But if you are like how I was at the time, and think that [[C]] can't be much different from [[C++]], you might be as surprised as I was to learn that that's not the case at all. [[C]] forces you to think about what you and your computer are doing. It has a generic interface that essentially maps to any [[Turing Machine]], so it doesn't bug you with too many of the specifics of the computer like you would have to deal with in [[Assembly]], but at the same time it also does very little to encapsulate (read &quot;hide&quot;) data from you. With [[Data Oriented Programming]] being the good idea that it is, you will find that [[C]] puts you in an excellent position to create some of the best programs you can possibly write.
@@ -13393,7 +13405,7 @@ This video gives an idea of just how prevalent and important this language is, e
 
 And this is an entire series of free lectures that will certainly help you understand the intricates of the language, especially memory management and pointers:
 
-&lt;center&gt;&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/videoseries?list=PLF1893D2496823711&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;&lt;/center&gt;</pre>
+{{$:/Series/Programming Paradigms with Jerry Cain}}</pre>
 </div>
 <div created="20210524073121080" modified="20210525051143711" tags="Bible Archive.org Codex Portuguese Hebrew" title="The Cervera Codex">
 <pre>One of my favorite resources available on [[Archive.org|https://archive.org/details/CerveraBible]]. This is one that I uploaded myself, after verifying that the Portuguese site I saved it from had it marked in the public domain. So generous of them to share their national treasures with us! Comes with two versions, one that has more colorful photos and another that is far more readable.
