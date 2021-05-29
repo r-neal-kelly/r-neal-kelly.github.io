@@ -14410,8 +14410,8 @@ In the example folder of the Skylib directory, there is an example Plugin_t ([[.
 
 The Form_ID_t ([[.h|https://github.com/r-neal-kelly/doticu-skylib/blob/master/Source/Plugins/doticu_skylib/include/doticu_skylib/form_id.h]], [[.cpp|https://github.com/r-neal-kelly/doticu-skylib/blob/master/Source/Plugins/doticu_skylib/src/doticu_skylib/form_id.cpp]]) handles many troublesome operations that mod developers over the years run into dealing with heavy plugins (.esp) and light plugins (.esl). It's capable of putting together and taking apart form indices and mod indices for both kinds of plugins, and it's pretty well battle-tested with my mod [[NPC Lookup|https://github.com/r-neal-kelly/doticu-npc-lookup]], which uses it to store spawned references.</pre>
 </div>
-<div created="20210529015800034" modified="20210529021320142" tags="Programming Portfolio Blog Skylib C++ Code" title="Skylib: Contained References">
-<pre>It's nice to be able to create such a short and sweet function when dealing with Extra_Container_Changes_t. Usually, it's a lot more complicated because this type represents one of the most complicated parts of Skyrim's game model: container inventories.
+<div created="20210529015800034" modified="20210529021349655" tags="Programming Portfolio Blog Skylib C++ Code" title="Skylib: Contained References">
+<pre>It's nice to be able to create such a short and sweet function when dealing with Extra_Container_Changes_t. Usually, it's a lot more convoluted because this type represents one of the most complicated parts of Skyrim's game model: container inventories.
 
 ```cpp
     void Extra_List_t::Contained_References(Vector_t&lt;some&lt;Reference_t*&gt;&gt;&amp; results) const
