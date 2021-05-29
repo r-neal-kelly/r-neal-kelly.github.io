@@ -1227,6 +1227,8 @@ Error message and password prompt
 
 <li>Skylib - Powerful Types</li>
 
+<li>Skylib: Contained References</li>
+
 <li>Socrates</li>
 
 <li>SoulSearchAndDestroy</li>
@@ -12516,8 +12518,8 @@ Error message and password prompt
 <div created="20210520171436640" modified="20210528153840181" title="$:/state/tab--959111941">
 <pre>$:/core/ui/ControlPanel/Stylesheets</pre>
 </div>
-<div created="20210520062243477" modified="20210528154137060" title="$:/state/tab-1749438307">
-<pre>$:/core/ui/ControlPanel/Info</pre>
+<div created="20210520062243477" modified="20210529021019982" title="$:/state/tab-1749438307">
+<pre>$:/core/ui/ControlPanel/Saving</pre>
 </div>
 <div created="20210520062830743" modified="20210522051152428" title="$:/state/tab-2065006209">
 <pre>$:/core/ui/ControlPanel/Saving/GitHub</pre>
@@ -12537,7 +12539,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210528233028261" list="[[Brave Browser]] Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[The Play of Daniel]] [[MODERNS - Jarre]] [[The Streets of Whiterun]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Douglas Engelbart - The Mother of All Demos]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210528233724625" title="$:/StoryList">
+<div created="20210529020726447" list="[[Skylib: Contained References]] Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[The Play of Daniel]] [[MODERNS - Jarre]] [[The Streets of Whiterun]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Douglas Engelbart - The Mother of All Demos]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210529021017838" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14407,6 +14409,41 @@ I still need to write the part that fetches the string to replace the tag with. 
 In the example folder of the Skylib directory, there is an example Plugin_t ([[.h|https://github.com/r-neal-kelly/doticu-skylib/blob/master/Example/My%20Plugin/include/my_plugin.h]], [[.cpp|https://github.com/r-neal-kelly/doticu-skylib/blob/master/Example/My%20Plugin/src/my_plugin.cpp]]) that allows one to quickly get started making a plugin for SKSE with the Skylib library. The [[.cpp|https://github.com/r-neal-kelly/doticu-skylib/blob/master/Example/My%20Plugin/src/my_plugin.cpp]] file in particular details what each event and function is useful for that you can use or opt out of without any real loss of efficiency.
 
 The Form_ID_t ([[.h|https://github.com/r-neal-kelly/doticu-skylib/blob/master/Source/Plugins/doticu_skylib/include/doticu_skylib/form_id.h]], [[.cpp|https://github.com/r-neal-kelly/doticu-skylib/blob/master/Source/Plugins/doticu_skylib/src/doticu_skylib/form_id.cpp]]) handles many troublesome operations that mod developers over the years run into dealing with heavy plugins (.esp) and light plugins (.esl). It's capable of putting together and taking apart form indices and mod indices for both kinds of plugins, and it's pretty well battle-tested with my mod [[NPC Lookup|https://github.com/r-neal-kelly/doticu-npc-lookup]], which uses it to store spawned references.</pre>
+</div>
+<div created="20210529015800034" modified="20210529020840551" tags="Programming Portfolio Blog Skylib C++ Code" title="Skylib: Contained References">
+<pre>It's nice to be able to create such a short and sweet function when dealing with Extra_Container_Changes_t, which is a representation of one of the most complicated parts of Skyrim's game model: container inventories.
+
+```cpp
+    void Extra_List_t::Contained_References(Vector_t&lt;some&lt;Reference_t*&gt;&gt;&amp; results) const
+    {
+        using Entries_t = List_t&lt;maybe&lt;Container_Changes_Entry_t*&gt;&gt;;
+        using X_Lists_t = List_t&lt;maybe&lt;Extra_List_t*&gt;&gt;;
+
+        Read_Locker_t locker(this-&gt;lock);
+
+        maybe&lt;Extra_Container_Changes_t*&gt; x_container = Get&lt;Extra_Container_Changes_t&gt;(locker);
+        if (x_container &amp;&amp; x_container-&gt;container_changes &amp;&amp; x_container-&gt;container_changes-&gt;entries) {
+            Entries_t&amp; entries = *x_container-&gt;container_changes-&gt;entries;
+            if (!entries.Is_Empty()) {
+                for (maybe&lt;Entries_t::Node_t*&gt; it = &amp;entries.head; it; it = it-&gt;next) {
+                    maybe&lt;Container_Changes_Entry_t*&gt; entry = it-&gt;value;
+                    if (entry &amp;&amp; entry-&gt;x_lists) {
+                        X_Lists_t&amp; x_lists = *entry-&gt;x_lists;
+                        for (maybe&lt;X_Lists_t::Node_t*&gt; it = &amp;x_lists.head; it; it = it-&gt;next) {
+                            maybe&lt;Extra_List_t*&gt; x_list = it-&gt;value;
+                            if (x_list) {
+                                maybe&lt;Reference_t*&gt; reference = x_list-&gt;Representative_Reference();
+                                if (reference) {
+                                    results.push_back(reference());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+```</pre>
 </div>
 <div created="20210524101730385" modified="20210524101743375" tags="Philosophy" title="Socrates">
 <pre></pre>
