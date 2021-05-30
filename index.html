@@ -1111,6 +1111,8 @@ Error message and password prompt
 
 <li>Douglas Engelbart - The Mother of All Demos</li>
 
+<li>Draft of 'Binary Files with C++'</li>
+
 <li>DSM-5</li>
 
 <li>Dysthymia Disorder</li>
@@ -12551,7 +12553,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210530075421515" list="[[Binary Files with C++]] Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[The Play of Daniel]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210530075421515" title="$:/StoryList">
+<div created="20210530080956692" list="[[Draft of 'Binary Files with C++']] Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[The Play of Daniel]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210530080956692" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14004,6 +14006,23 @@ Thompson elaborates the reality of how GREP was written:
 <pre>This guy really deserves more credit! What an amazing man. And this is his Mother of All Demos. Not only did he create the mouse with his team, but they are also responsible for the first real visual UI, even before Xerox made theirs. Absolutely revolutionary!:
 
 {{||$:/neal/youtube_video}}</pre>
+</div>
+<div created="20210530012422065" draft.of="Binary Files with C++" draft.title="Binary Files with C++" modified="20210530081106302" tags="C++ Programming" title="Draft of 'Binary Files with C++'">
+<pre>I thought this was a pretty good write up of how to deal with reading and writing binary files in C++:
+
+[[Binary Files with C++|https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/cppBinaryFileIO-2.html]]
+
+I'm currently working on making my own co-save file for [[NPC Party]]. It's come to the point where saving my state in a script object in the main save file is too inefficient and difficult to optimize. I'm jumping through hoops trying to get all my data into that format, and I would now have to sacrifice stability no matter what I do, so it's time to grow into making my own save file, which if I create correctly, will be extremely stable and efficient.
+
+I don't want to spend too long working on this so that I continue making progress in the project in other areas, but I need to make sure I do this as well as possible. Essentially, we'll need to make sure we do everything in order correctly, and if we update the program and the read/write order changes, we need to maintain the structures from the previous version, read that, and write into the new version. This means that the save structures should be as simple as possible, separate from our main types, and we should avoid using classes and prefer to use structs, so that we don't have to deal with accidentally saving member function pointers and whatever else is stored on class instances.
+
+We'll have to put some version markers at the start of the file. Our main type will have to correctly distribute the read/write operations, the other types should not have to worry about when they are to write/read, just to maintain their own struct versions. I would like to keep every struct version indefinitely. This means we should store these structs in an orderly fashion. The reason I want to keep the indefinitely is not just so that I can update from any version of the program 1.0.0+, but because I want to be able to interpret any .npcp save file into any loaded game state. This means our data should not be so strictly attached to the main game's state that it would fail to load when in a new or different game. This is so people can transfer as much of their party over to a different save. This is a lower priority, but it would be really nice to have, and has been requested of me in the past.
+
+Hopefully I can do this in a timely fashion. Every time I take up another burden producing this program, I feel my shoulders sink in under the weight, especially due to the time pressure and the inability of my brain to fully comprehend what it's doing at all times. I have to remind myself that we are just human after all.
+
+On a positive note, I think this is a great idea and will make me expand my skill set. I already have the idea that when reading from the save file, we should always pass the version of the save file to the readers, even if they don't have to do anything special. And I think it will be fine in this same function to let the reader call an update method on the data if it needs to. There is no reason to do a separate pass, just let each type do what it needs to do, because it knows best. C++ at its finest.
+
+The argument that we should have a separate update pass would be that some type or another may need data from another type. However, because each type cannot know when it's being loaded in relation to other types, making a separate pass still cannot guarantee that, because there is no guarantee that requested data will be updated prior to the request. We would have to create a loading mechanism that updates each type after it has all of its requirements. While not a bad idea, I don't really think that this is necessary. We should design our types to have independent data until reading and updating is complete. If necessary, we should continue the pattern of hierarchical types that define their own order interior to themselves and their children, so children can at least get data from any parent if necessary.</pre>
 </div>
 <div created="20210524000153843" modified="20210524000325921" tags="Autism" title="DSM-5">
 <pre>Diagnostic and Statistical Manual of Mental Disorders</pre>
