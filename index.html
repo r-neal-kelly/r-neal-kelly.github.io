@@ -12551,7 +12551,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210530074901382" list="$:/ControlPanel Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[The Play of Daniel]] [[MODERNS - Jarre]] [[The Streets of Whiterun]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210530074901382" title="$:/StoryList">
+<div created="20210530075421515" list="[[Binary Files with C++]] Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[The Play of Daniel]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210530075421515" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -13853,7 +13853,7 @@ Here's an [[old YouTube|https://www.youtube.com/user/BenDrakeMusic]] of his.
 
 I'm afraid Ben has gone done a dark path as of late. It's actually hard to keep track of him and what he's up to as the years go by. He moves from place to place, and since I've last looked him up, I'm afraid he may not be coming back from the path he's walking down. I hope he'll turn out alright. [[Depression]] is a real killer. If only he knew how important he is to people, even people like me whom he's never met. His music changed my life for the better!</pre>
 </div>
-<div created="20210530012422065" modified="20210530014650966" tags="C++ Programming" title="Binary Files with C++">
+<div created="20210530012422065" modified="20210530080031135" tags="C++ Programming" title="Binary Files with C++">
 <pre>I thought this was a pretty good write up of how to deal with reading and writing binary files in C++:
 
 [[Binary Files with C++|https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/cppBinaryFileIO-2.html]]
@@ -13866,7 +13866,9 @@ We'll have to put some version markers at the start of the file. Our main type w
 
 Hopefully I can do this in a timely fashion. Every time I take up another burden producing this program, I feel my shoulders sink in under the weight, especially due to the time pressure and the inability of my brain to fully comprehend what it's doing at all times. I have to remind myself that we are just human after all.
 
-On a positive note, I think this is a great idea and will make me expand my skill set. I already have the idea that when reading from the save file, we should always pass the version of the save file to the readers, even if they don't have to do anything special. And I think it will be fine in this same function to let the reader call an update method on the data if it needs to. There is no reason to do a separate pass, just let each type do what it needs to do, because it knows best. C++ at its finest.</pre>
+On a positive note, I think this is a great idea and will make me expand my skill set. I already have the idea that when reading from the save file, we should always pass the version of the save file to the readers, even if they don't have to do anything special. And I think it will be fine in this same function to let the reader call an update method on the data if it needs to. There is no reason to do a separate pass, just let each type do what it needs to do, because it knows best. C++ at its finest.
+
+The argument that we should have a separate update pass would be that some type or another may need data from another type. However, because each type cannot know when it's being loaded in relation to other types, making a separate pass still cannot guarantee that. We would have to create a loading mechanism that updates each type after it has all of its requirements. While not a bad idea, I don't really think that this is necessary. We should design our types to have independent data until reading and updating is complete.</pre>
 </div>
 <div created="20210525190702839" modified="20210529000136923" tags="Technology Recommended Blog YouTube Advertising" title="Brave Browser">
 <pre>I highly recommend getting Brave Browser. It blocks ads all over the internet!
