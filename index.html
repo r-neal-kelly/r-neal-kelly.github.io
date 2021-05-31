@@ -14523,7 +14523,7 @@ Top-notch from none other than [[ThePrimeThanatos]]:
 
 &lt;center&gt;&lt;iframe src=&quot;https://archive.org/embed/Aleppo_Codex_direct_scan&quot; width=&quot;560&quot; height=&quot;384&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;true&quot; mozallowfullscreen=&quot;true&quot; allowfullscreen&gt;&lt;/iframe&gt;&lt;/center&gt;</pre>
 </div>
-<div created="20210531152512137" modified="20210531153848308" tags="C Unicode UTF Programming" title="The Beauty of C - UTF-32 to UTF-8">
+<div created="20210531152512137" modified="20210531154801773" tags="C Unicode UTF Programming" title="The Beauty of C - UTF-32 to UTF-8">
 <pre>[[I've started up a pure C project recently|https://github.com/r-neal-kelly/regex]], just calling it &quot;regex&quot; for now. I started it this past Sabbath to help me keep my nerves down. I really love regex engines and I miss my old C codebase that I don't have access to at this time. Now that I put most of my code online these days on GitHub, I'll at least have something to refer back to. I'm not sure I'm going to finish the project, at least maybe not in pure C. I do miss some aspects of C++ that I've grown accustomed to. For instance, my dynamic array type in this new project uses void* to achieve generic usage. No where near as efficient as using a template would be, but funnily enough, I suspect that even as it is at this moment, it's way faster that std::vector. I don't know what it is that they are doing to make sure the std::vector is so slow, but whatever. It's relatively insignificant for most things. However, I doubt anything is as fast a C macro dynamic array. That's what is used in the linux kernal, and it's probably not too hard to make one. I want to stay away from getting sucked into macros if possible. I don't care if my program is a little slower than it could be. I really just want to get some formal structure for the program going and not dilly dally on generics too much. I may take the structure I achieve in this version and bring it to C++ to make it ultimately faster and easier to use.
 
 Anyway, here's a beautiful little function. It relies on the caller to check for endianess and validation, which I've already written functions for. I just wanted to show off how amazingly simple and elegant the UTF-8 algorithm is (I probably need to triple check all of these magic numbers, will do when I make some tests for it):
@@ -14552,6 +14552,61 @@ void_t utf_sequence_32_to_8(utf_sequence_32_t* it, utf_sequence_8_t* to)
         to-&gt;c = ((it-&gt;a &gt;&gt; 6) &amp; 0x3F) | 0x80;
         to-&gt;d = (it-&gt;a &amp; 0x3F) | 0x80;
         to-&gt;count = 4;
+    }
+}
+```
+
+While I'm at it, here are some more funcs from my recent escapade into UTF convertors. They're all currently just prototypes as I move into making my unicode saavy string types:
+
+```c
+bool_t string_utf_32_to_utf_8(const utf_32_t* it, array_t* result)
+{
+    assert(it);
+    assert(result);
+    assert(array_is_valid(result));
+    assert(array_type_size(result) == sizeof(utf_8_t));
+
+    array_clear(result);
+
+    if (*it) {
+        byte_t* bytes = (byte_t*)it;
+        if (bytes[0] == 0xFF &amp;&amp; bytes[1] == 0xFE &amp;&amp; bytes[2] == 0x00 &amp;&amp; bytes[3] == 0x00) {
+            return string_utf_32_le_to_utf_8(it, result);
+        } else {
+            return string_utf_32_be_to_utf_8(it, result);
+        }
+    } else {
+        array_push(result, it);
+        return 1;
+    }
+}
+
+bool_t string_utf_32_le_to_utf_8(const utf_32_t* it, array_t* result)
+{
+    assert(it);
+    assert(result);
+    assert(array_is_valid(result));
+    assert(array_type_size(result) == sizeof(utf_8_t));
+
+    array_clear(result);
+
+    if (*it) {
+        utf_sequence_32_t from;
+        bool_t do_swap = os_is_big_endian();
+
+        while (*it) {
+            utf_sequence_32_create(&amp;from, it, do_swap);
+            utf_sequence_32_to_8_array(&amp;from, result);
+            it += 1;
+        }
+        utf_sequence_32_create(&amp;from, it, do_swap);
+        utf_sequence_32_to_8_array(&amp;from, result);
+
+        return 1;
+    } else {
+        array_push(result, it);
+
+        return 1;
     }
 }
 ```</pre>
