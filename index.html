@@ -1245,6 +1245,8 @@ Error message and password prompt
 
 <li>The Aleppo Codex</li>
 
+<li>The Beauty of C - UTF-32 to UTF-8</li>
+
 <li>The C Programming Language</li>
 
 <li>The Cervera Codex</li>
@@ -12535,8 +12537,8 @@ Error message and password prompt
 <div created="20210520171436640" modified="20210528153840181" title="$:/state/tab--959111941">
 <pre>$:/core/ui/ControlPanel/Stylesheets</pre>
 </div>
-<div created="20210520062243477" modified="20210530074625796" title="$:/state/tab-1749438307">
-<pre>$:/core/ui/ControlPanel/Info</pre>
+<div created="20210520062243477" modified="20210531154109892" title="$:/state/tab-1749438307">
+<pre>$:/core/ui/ControlPanel/Saving</pre>
 </div>
 <div created="20210520062830743" modified="20210522051152428" title="$:/state/tab-2065006209">
 <pre>$:/core/ui/ControlPanel/Saving/GitHub</pre>
@@ -12556,7 +12558,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div list="[[Unicode in C++ - James McNellis]] Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[Thomas Dunford - Lutist]] [[The Play of Daniel]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" title="$:/StoryList">
+<div created="20210531154105805" list="[[The Beauty of C - UTF-32 to UTF-8]] Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[Thomas Dunford - Lutist]] [[The Play of Daniel]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210531154105805" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14520,6 +14522,39 @@ Top-notch from none other than [[ThePrimeThanatos]]:
 <pre>An important resource available on Archive.org, [[here|https://archive.org/details/Aleppo_Codex]] and [[here|https://archive.org/details/Aleppo_Codex_direct_scan]]. This is one of the oldest extant versions of the Hebrew Bible, although it was seriously damaged in a fire in the last century. [[The Leningrad Codex]] has taken its place in matters of Scriptural importance where applicable. Although that says nothing of the ancient [[Paleo Hebrew]] manuscripts found among the [[Dead Sea Scrolls]].
 
 &lt;center&gt;&lt;iframe src=&quot;https://archive.org/embed/Aleppo_Codex_direct_scan&quot; width=&quot;560&quot; height=&quot;384&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;true&quot; mozallowfullscreen=&quot;true&quot; allowfullscreen&gt;&lt;/iframe&gt;&lt;/center&gt;</pre>
+</div>
+<div created="20210531152512137" modified="20210531153848308" tags="C Unicode UTF Programming" title="The Beauty of C - UTF-32 to UTF-8">
+<pre>[[I've started up a pure C project recently|https://github.com/r-neal-kelly/regex]], just calling it &quot;regex&quot; for now. I started it this past Sabbath to help me keep my nerves down. I really love regex engines and I miss my old C codebase that I don't have access to at this time. Now that I put most of my code online these days on GitHub, I'll at least have something to refer back to. I'm not sure I'm going to finish the project, at least maybe not in pure C. I do miss some aspects of C++ that I've grown accustomed to. For instance, my dynamic array type in this new project uses void* to achieve generic usage. No where near as efficient as using a template would be, but funnily enough, I suspect that even as it is at this moment, it's way faster that std::vector. I don't know what it is that they are doing to make sure the std::vector is so slow, but whatever. It's relatively insignificant for most things. However, I doubt anything is as fast a C macro dynamic array. That's what is used in the linux kernal, and it's probably not too hard to make one. I want to stay away from getting sucked into macros if possible. I don't care if my program is a little slower than it could be. I really just want to get some formal structure for the program going and not dilly dally on generics too much. I may take the structure I achieve in this version and bring it to C++ to make it ultimately faster and easier to use.
+
+Anyway, here's a beautiful little function. It relies on the caller to check for endianess and validation, which I've already written functions for. I just wanted to show off how amazingly simple and elegant the UTF-8 algorithm is (I probably need to triple check all of these magic numbers, will do when I make some tests for it):
+
+```c
+void_t utf_sequence_32_to_8(utf_sequence_32_t* it, utf_sequence_8_t* to)
+{
+    assert(it);
+    assert(to);
+
+    if (it-&gt;a &lt;= 0x7F) {
+        to-&gt;a = it-&gt;a;
+        to-&gt;count = 1;
+    } else if (it-&gt;a &lt;= 0x7FF) {
+        to-&gt;a = ((it-&gt;a &gt;&gt; 6) &amp; 0x1F) | 0xC0;
+        to-&gt;b = (it-&gt;a &amp; 0x3F) | 0x80;
+        to-&gt;count = 2;
+    } else if (it-&gt;a &lt;= 0xFFFF) {
+        to-&gt;a = ((it-&gt;a &gt;&gt; 16) &amp; 0x0F) | 0xE0;
+        to-&gt;b = ((it-&gt;a &gt;&gt; 6) &amp; 0x3F) | 0x80;
+        to-&gt;c = (it-&gt;a &amp; 0x3F) | 0x80;
+        to-&gt;count = 3;
+    } else {
+        to-&gt;a = ((it-&gt;a &gt;&gt; 18) &amp; 0x07) | 0xF0;
+        to-&gt;b = ((it-&gt;a &gt;&gt; 12) &amp; 0x3F) | 0x80;
+        to-&gt;c = ((it-&gt;a &gt;&gt; 6) &amp; 0x3F) | 0x80;
+        to-&gt;d = (it-&gt;a &amp; 0x3F) | 0x80;
+        to-&gt;count = 4;
+    }
+}
+```</pre>
 </div>
 <div created="20210524014254676" modified="20210528044329195" tags="Programming C [[Dennis Ritchie]] Unix Video" title="The C Programming Language">
 <pre>After I had become extremely comfortable with [[JavaScript]], [[NodeJS]], and [[Electron]], I found that I wanted more control and more efficiency for the projects I was creating. So of course, the obvious next step was a compiled language, and in particular the primary language used to create [[JavaScript]], that being [[C++]]. But what was not obvious to me at the time was just how many pitfalls I would end up stumbling into with this monolithic language. I found myself cycling through ways of structuring my program, never really making progress, just trying to do it in the &quot;right&quot; way but never succeeding. After becoming discouraged from failing to settle on a sure way, and the exhaustion of rewriting my code so many times, I almost gave up on compiled languages for good. But for some reason, I decided to toy around with [[C]] as an exercise in curious futility, almost shamefully so because I knew, as every modern programmer does, that this old dusty language isn't good for much of anything anymore.
