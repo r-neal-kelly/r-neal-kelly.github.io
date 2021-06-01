@@ -1199,6 +1199,8 @@ Error message and password prompt
 
 <li>Nikola Tesla</li>
 
+<li>NPC Party - Began Our Own Serialization</li>
+
 <li>Nyango Star - Oh Japan.</li>
 
 <li>Odysseus</li>
@@ -12558,7 +12560,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210601123712253" list="Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[Thomas Dunford - Lutist]] [[The Play of Daniel]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210601123712253" title="$:/StoryList">
+<div created="20210601123712253" list="[[NPC Party - Began Our Own Serialization]] Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[Thomas Dunford - Lutist]] [[The Play of Daniel]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210601123712253" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14277,6 +14279,23 @@ While not your traditional blog, this site follows the [[Zettelkasten]] way of c
 </div>
 <div created="20210524043006042" modified="20210524043127260" tags="Science Autism" title="Nikola Tesla">
 <pre>My favorite scientist! I'll definitely be talking more about him.</pre>
+</div>
+<div created="20210601123720135" modified="20210601130117823" tags="[[NPC Party]] Programming Portfolio Blog Serialization" title="NPC Party - Began Our Own Serialization">
+<pre>This is something that I've really been needing to do for a while now, it's just taken a lot of steps to get here. So essentially, we are now saving our own .npcp file that goes neck and neck with the main game's .ess file and SKSE's .skse file. We will be storing all of own data by serialization, which has some drawbacks in that it's not as robust as other methods, but its advantages in my opinion far outweigh its defects.
+
+Because this is a simpler project than say the entire game, I believe we can get away with manually reading old save structures when updating, and it shouldn't be too big of a deal. I'm not opposed to having that old code hanging around, although I'll probably put these old Save_ts in their old header files, just to keep things tidy, especially for types that have a lot of data, like Members_t. But we're not going to support &quot;forward compatibly&quot;, which is were an older version of a program tries to read the save file generated from a newer version. Just not going to happen, and we'll have to make that clear to users.
+
+The benefits are that we can store data pretty much how it appears in the code. This is important for me because I've been struggling to get the data right while being confined in the dreadful position of storing my data in script files. It's been something of a nightmare for NPC Party, just because there is so much data, and it's getting to be too complicated to make it work in scripts. There are way to many intermediate formats and tricks that I have to compose to make that work. With our own save file, it will be trivial in comparison, because we can actually store structs instead of just arrays, all without accruing a serious cost to the game engine or anything else. If we tried that in Papyrus, we would have to make a script per struct, and that's prohibitively expensive! Instead of all that extra junk, our serialization is going to be lightning fast, and extremely stable. another great thing is it would not be easy for another program to alter my save file without making a dedicated effort. Some SKSE plugin or another can't just go into a script and change some variables (not that that's common, at least I hope not.) They would actually have to alter the save file itself, or somehow gain access to my program's internal dynamic memory.
+
+I'm really happy about this. It's been such a struggle and I want to implement these amazing improvements all over the board, and this has been a severely limiting factor, but no more. It took a while to get to this point because we first had to really nail down the save/load structure of the engine, which was painstakingly difficult. But with the help of the amazing people over at NexusMods, especially Ellewyn who helped me bug test thoroughly, we now have an extremely stable SKSE_Plugin_t that is being run by thousands of people as I write this, with 0 reported errors as of this moment. I'm very grateful!
+
+The next step was to actually realize that I can now create my own save file, and that frankly, there's no information that I can't store now. But we needed to gain access to how the save files are stored on disc. Thankfully, the SKSE team has done all that hard labor and I was able to read their code to figure it out. (I love those guys.) So, my save file will work with not just regular modded Skyrim, but also with mod managers like Mod Organizer 2. Very important to get that right!
+
+After that, I had to make sure I undersatnd how the std::fstream type works. For example, there's a minor but important distinction between operator bool() and good(), that being that good is more rigid, and will not return true if the eof bit has been set. This is important because I need to know whether that bit has been reached before it should to cancel the load operation and reset the state of the entire program. We're using a little trick of adding a single unused and unread byte at the end of the save file so that we should never reach eof under nominal circumstances.
+
+Now that all of that is out of the way, I essentially just need to write out all of my new Save_t structures. I've done several of the easier ones on the top layer and tomorrow I aim to do more of the difficult ones, the ones for which we are doing our own serialization in the first place. Because I'm still testing and expanding the data, we'll be starting off with a new game state each time we change the save file structure, so I want to try to get things right as well as I can now and stick with them. I //may// leave some unused bytes here and there for expansion, but I've not yet decided to do that. Not sure if it's really a good idea or not, because it may not mix well with the simple and straightforward method of just reading old Save_t's into new Save_ts.
+
+More tomorrow.</pre>
 </div>
 <div created="20210525095101410" modified="20210528041048367" tags="[[Nyango Star]] Japan Music Drummer Modern Cats" title="Nyango Star - Oh Japan." youtube_id="-UYgORr5Qhg">
 <pre>I'm not kidding when I say this guy is a rock star in Japan right now:
