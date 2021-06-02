@@ -14054,10 +14054,12 @@ Thompson elaborates the reality of how GREP was written:
 
 {{||$:/neal/youtube_video}}</pre>
 </div>
-<div created="20210602112732281" modified="20210602114244768" tags="Programming Serialization Messaging" title="Forward Compatibility">
+<div created="20210602112732281" modified="20210602114353838" tags="Programming Serialization Messaging" title="Forward Compatibility">
 <pre>This is where you make new save files compatible with older versions of a program, the inverse of Backwards Compatibility, where one makes old save files compatible with newer versions of a program. There's really only one way that I can think of doing this with Serialization, and that is the following: essentially, you need to save the old version's state in the save file, which can really increase the size of the save file. And when you save, the data that can be saved to older versions trickles down the hierarchy of updates, such that each update only updates it's predecessor until the oldest version left in the file. I'm sure there are crazy ways of optimizing this, but the principle remains the same. Would probably work okay for programs that don't see much change in the data between updates, for example minor version updates. Probably not so great for major updates. When the old program goes to read and write the save file, it should ignore changing anything but its own version number and below, but maintain the blocks of newer version's data. Then for Backwards Compatibility one would have to make sure that the applicable newer versions are up to date. Of course, the last version to save the file would have to mark what version it was so all of this can be calculated. Honestly sounds like a nightmare.
 
-There are other ways of providing forward compatibility besides Serialization, and that being primary Messaging, which having not looked too thoroughly into it, and if I were to guess, would be a publish-subscription pattern that passes around data where it can be used. Much less efficient, and probably over-board for small programs.</pre>
+There are other ways of providing forward compatibility besides Serialization, and that being primary Messaging, which having not looked too thoroughly into it, and if I were to guess, would be a publish-subscription pattern that passes around data where it can be used. Much less efficient, and probably over-board for small programs.
+
+I'm not convinced that Forward Compatibility is really a worth goal for most programs, although maybe there are some edge cases. I think users kind of understand that they should back up their files in case they want to go back. There is not more sure way of keeping one's save files intact.</pre>
 </div>
 <div created="20210525050059940" modified="20210528054541792" tags="Music Modern [[432 hz]] Neal Portfolio Gamut" title="Gamut - 432 hz - From Who Came Whom">
 <pre>This is a classical piece I wrote way back in 2014.
