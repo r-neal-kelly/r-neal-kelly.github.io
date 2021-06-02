@@ -12564,7 +12564,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div list="[[NPC Party - Global Mod Caches]] Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[Thomas Dunford - Lutist]] [[The Play of Daniel]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" title="$:/StoryList">
+<div created="20210602111414054" list="[[NPC Party - Global Mod Caches]] [[William Lane Craig and CosmicSkeptic Discuss The Kalam Cosmological Argument]] Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[Thomas Dunford - Lutist]] [[The Play of Daniel]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210602111429870" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14301,7 +14301,7 @@ Now that all of that is out of the way, I essentially just need to write out all
 
 More tomorrow.</pre>
 </div>
-<div created="20210602105849080" modified="20210602111309176" tags="Portfolio [[NPC Party]] Programming C++" title="NPC Party - Global Mod Caches">
+<div created="20210602105849080" modified="20210602111602686" tags="Portfolio [[NPC Party]] Programming C++" title="NPC Party - Global Mod Caches">
 <pre>Okay, we've got the global mod caches out of the way. There are a total of four. There are two sets of heavy and light caches. The first set is for writing to the save file. It's created very early in the program, when the game's data is loaded (which happens only the one time.) Because the mod list never changes in the game, we can be more efficient doing it at that time:
 
 ```cpp
@@ -14404,7 +14404,7 @@ Any time the save game is loaded, we will deserialize the global cache as it was
     }
 ```
 
-We separate heavy mods and light mods mostly for efficiency purposes, and they also have to be handled slightly differently. With this information in place, which is stored on the global Plugin_t, we can now verify any form id that we save in the game, from any mod, whether heavy or light, whether the mod is still loaded, or whether its mod index has changed.</pre>
+We separate heavy mods and light mods mostly for efficiency purposes, and they also have to be handled slightly differently. With this information in place, which is stored on the global Plugin_t, we can now verify any form id that we save in the game, from any mod, whether heavy or light, whether the mod is still loaded or not, or whether its mod index has changed or not.</pre>
 </div>
 <div created="20210525095101410" modified="20210528041048367" tags="[[Nyango Star]] Japan Music Drummer Modern Cats" title="Nyango Star - Oh Japan." youtube_id="-UYgORr5Qhg">
 <pre>I'm not kidding when I say this guy is a rock star in Japan right now:
