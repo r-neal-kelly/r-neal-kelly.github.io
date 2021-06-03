@@ -1205,6 +1205,8 @@ Error message and password prompt
 
 <li>NPC Party - Began Our Own Serialization</li>
 
+<li>NPC Party - Easily Saved Forms, Progress with Member_t</li>
+
 <li>NPC Party - Global Mod Caches</li>
 
 <li>Nyango Star - Oh Japan.</li>
@@ -12570,7 +12572,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210603021936691" list="Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Vivaldi - Gloria, All Female Performance]] [[The Play of Daniel]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210603021952043" title="$:/StoryList">
+<div list="[[NPC Party - Easily Saved Forms, Progress with Member_t]] Neal [[Hide Your Quests]] [[Chefchaouen, Morocco]] [[Is There Life After Death? Moderated by John Cleese]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Vivaldi - Gloria, All Female Performance]] [[The Play of Daniel]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14318,6 +14320,158 @@ After that, I had to make sure I undersatnd how the std::fstream type works. For
 Now that all of that is out of the way, I essentially just need to write out all of my new Save_t structures. I've done several of the easier ones on the top layer and tomorrow I aim to do more of the difficult ones, the ones for which we are doing our own serialization in the first place. Because I'm still testing and expanding the data, we'll be starting off with a new game state each time we change the save file structure, so I want to try to get things right as well as I can now and stick with them. I //may// leave some unused bytes here and there for expansion, but I've not yet decided to do that. Not sure if it's really a good idea or not, because it may not mix well with the simple and straightforward method of just reading old Save_t's into new Save_ts.
 
 More tomorrow.</pre>
+</div>
+<div created="20210603103204172" modified="20210603104303570" tags="Code Programming Portfolio C++ [[NPC Party]]" title="NPC Party - Easily Saved Forms, Progress with Member_t">
+<pre>The new serialization is going very well! I'm amazing by how much easier it is to just write to the save file rather than jumping through Papyrus's hoops. There are of course difficulties and trade offs, but they are quite workable. Here's the function that takes a Form_ID_t that is read directly from the save file and transforms it into either a valid Form_t* or nullptr:
+
+```cpp
+    template &lt;typename T&gt;
+    inline maybe&lt;T*&gt; NPCP_t::Deserialized_Form(maybe&lt;Form_ID_t&gt; form_id)
+    {
+        if (form_id) {
+            if (form_id.Is_Heavy()) {
+                maybe&lt;Heavy_Mod_Index_t&gt; mod_index = form_id.Heavy_Mod_Index();
+                maybe&lt;Heavy_Form_Index_t&gt; form_index = form_id.Heavy_Form_Index();
+                const Vector_t&lt;maybe&lt;Mod_t*&gt;&gt;&amp; mods = Deserialized_Heavy_Mods();
+                if (mod_index &amp;&amp; form_index &amp;&amp; mod_index &lt; mods.size() &amp;&amp; mods[mod_index]) {
+                    maybe&lt;Form_t*&gt; form = Game_t::Form(mods[mod_index](), form_index);
+                    if (form) {
+                        return form-&gt;As&lt;T&gt;();
+                    } else {
+                        return none&lt;T*&gt;();
+                    }
+                } else {
+                    return none&lt;T*&gt;();
+                }
+            } else {
+                maybe&lt;Light_Mod_Index_t&gt; mod_index = form_id.Light_Mod_Index();
+                maybe&lt;Light_Form_Index_t&gt; form_index = form_id.Light_Form_Index();
+                const Vector_t&lt;maybe&lt;Mod_t*&gt;&gt;&amp; mods = Deserialized_Light_Mods();
+                if (mod_index &amp;&amp; form_index &amp;&amp; mod_index &lt; mods.size() &amp;&amp; mods[mod_index]) {
+                    maybe&lt;Form_t*&gt; form = Game_t::Form(mods[mod_index](), form_index);
+                    if (form) {
+                        return form-&gt;As&lt;T&gt;();
+                    } else {
+                        return none&lt;T*&gt;();
+                    }
+                } else {
+                    return none&lt;T*&gt;();
+                }
+            }
+        } else {
+            return none&lt;T*&gt;();
+        }
+    }
+```
+
+Works in conjunction with helper functions to read and write from the save file:
+
+```cpp
+    template &lt;typename T&gt;
+    inline void NPCP_t::Write_Form(std::ofstream&amp; file, const maybe&lt;T*&gt;&amp; form)
+    {
+        if (file.good()) {
+            maybe&lt;Form_ID_t&gt; form_id = form ? form-&gt;form_id : none&lt;Form_ID_t&gt;();
+            file.write(reinterpret_cast&lt;char*&gt;(&amp;form_id), sizeof(form_id));
+        }
+    }
+
+    template &lt;typename T&gt;
+    inline void NPCP_t::Read_Form(std::ifstream&amp; file, maybe&lt;T*&gt;&amp; form)
+    {
+        if (file.good()) {
+            maybe&lt;Form_ID_t&gt; form_id = none&lt;Form_ID_t&gt;();
+            file.read(reinterpret_cast&lt;char*&gt;(&amp;form_id), sizeof(form_id));
+            form = Deserialized_Form&lt;T&gt;(form_id);
+        }
+    }
+```
+
+And lastly, we see how these functions come into play with the Save_t of Member_t. Take note with how much extra care is given to the Actor_t and Actor_Base_t. We do all these extra checks to ensure that the actor is who we think it is, otherwise it's just discarded. It's possible that in another save game file, or after an uninstall and reinstall, that the form id will be valid, but is it of the correct Actor_Base_t? And if the base is dynamic, does it match up with its static template? Interestingly, if the actor is missing but we have a valid static base/actual base duo, we recreate the actor. The only scenario where this could occur is if the actor was deleted statically in a .esp file, in which case we can create a copy that isn't deleted, or if moving the save file to another game's context, we can literally transfer all of our members in one fell-swoop:
+
+```cpp
+    void Member_t::Save_t::Write(std::ofstream&amp; file)
+    {
+        maybe&lt;Actor_Base_t*&gt; static_base = none&lt;Actor_Base_t*&gt;();
+        if (this-&gt;actual_base) {
+            static_base = actual_base-&gt;Identifiable_Static_Base();
+            if (!static_base) {
+                static_base = this-&gt;actual_base;
+            }
+        }
+
+        NPCP.Write_Form(file, static_base);
+        NPCP.Write_Form(file, this-&gt;actual_base);
+        NPCP.Write_Form(file, this-&gt;actor);
+
+        NPCP.Write(file, this-&gt;flags);
+        NPCP.Write(file, this-&gt;flags_has_suit);
+        NPCP.Write(file, this-&gt;flags_only_playables);
+
+        NPCP.Write(file, this-&gt;alpha);
+        NPCP.Write(file, this-&gt;rating);
+        NPCP.Write(file, this-&gt;relation);
+        NPCP.Write(file, this-&gt;suit_type);
+        NPCP.Write(file, this-&gt;vitality);
+
+        NPCP.Write_Form(file, this-&gt;combat_style);
+        NPCP.Write_Form(file, this-&gt;ghost_ability);
+        NPCP.Write_Form(file, this-&gt;outfit);
+        NPCP.Write_Form(file, this-&gt;pack);
+        NPCP.Write_Form(file, this-&gt;suitcase);
+        NPCP.Write_Form(file, this-&gt;voice_type);
+
+        NPCP.Write_String(file, this-&gt;name);
+    }
+
+    void Member_t::Save_t::Read(std::ifstream&amp; file)
+    {
+        maybe&lt;Actor_Base_t*&gt; static_base;
+        maybe&lt;Actor_Base_t*&gt; actual_base;
+        maybe&lt;Actor_t*&gt; actor;
+
+        NPCP.Read_Form(file, static_base);
+        NPCP.Read_Form(file, actual_base);
+        NPCP.Read_Form(file, actor);
+        if (static_base) {
+            if (!actual_base || actual_base-&gt;Identifiable_Static_Base() != static_base) {
+                actual_base = static_base;
+            }
+            if (!actor) {
+                actor = Actor_t::Create(actual_base(), !actual_base-&gt;Does_Respawn(), true, false);
+            }
+            if (actor) {
+                this-&gt;actor = actor;
+                this-&gt;actual_base = actual_base;
+            } else {
+                this-&gt;actor = none&lt;Actor_t*&gt;();
+                this-&gt;actual_base = none&lt;Actor_Base_t*&gt;();
+            }
+        } else {
+            this-&gt;actor = none&lt;Actor_t*&gt;();
+            this-&gt;actual_base = none&lt;Actor_Base_t*&gt;();
+        }
+
+        NPCP.Read(file, this-&gt;flags);
+        NPCP.Read(file, this-&gt;flags_has_suit);
+        NPCP.Read(file, this-&gt;flags_only_playables);
+
+        NPCP.Read(file, this-&gt;alpha);
+        NPCP.Read(file, this-&gt;rating);
+        NPCP.Read(file, this-&gt;relation);
+        NPCP.Read(file, this-&gt;suit_type);
+        NPCP.Read(file, this-&gt;vitality);
+
+        NPCP.Read_Form(file, this-&gt;combat_style);
+        NPCP.Read_Form(file, this-&gt;ghost_ability);
+        NPCP.Read_Form(file, this-&gt;outfit);
+        NPCP.Read_Form(file, this-&gt;pack);
+        NPCP.Read_Form(file, this-&gt;suitcase);
+        NPCP.Read_Form(file, this-&gt;voice_type);
+
+        NPCP.Read_String(file, this-&gt;name);
+    }
+```</pre>
 </div>
 <div created="20210602105849080" modified="20210602130953773" tags="Portfolio [[NPC Party]] Programming C++ Blog Code" title="NPC Party - Global Mod Caches">
 <pre>Okay, we've got the global mod caches out of the way. There are a total of four. There are two sets of heavy and light caches. The first set is for writing to the save file. It's created very early in the program, when the game's data is loaded (which happens only the one time.) Because the mod list never changes in the game, we can be more efficient doing it at that time:
