@@ -1119,6 +1119,8 @@ Error message and password prompt
 
 <li>Douglas Engelbart - The Mother of All Demos</li>
 
+<li>Draft of 'NPC Party - Thinking About Evaluation'</li>
+
 <li>DSM-5</li>
 
 <li>Dysthymia Disorder</li>
@@ -12595,7 +12597,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210604122057934" list="[[NPC Party - Thinking About Evaluation]] Neal [[Hide Your Quests]] [[Karl Jobst - The Biggest Conmen In Video Game History Strike Again!]] [[Playing 10000 Marbles - Marble Machine X Accuracy Test]] [[Marty Friedman - Miracle]] [[Vivaldi - Gloria, All Female Performance]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210604122057934" title="$:/StoryList">
+<div created="20210604122057934" list="[[Draft of 'NPC Party - Thinking About Evaluation']] Neal [[Hide Your Quests]] [[Karl Jobst - The Biggest Conmen In Video Game History Strike Again!]] [[Playing 10000 Marbles - Marble Machine X Accuracy Test]] [[Marty Friedman - Miracle]] [[Vivaldi - Gloria, All Female Performance]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210604122057934" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14058,6 +14060,27 @@ Thompson elaborates the reality of how GREP was written:
 <pre>This guy really deserves more credit! What an amazing man. And this is his Mother of All Demos. Not only did he create the mouse with his team, but they are also responsible for the first real visual UI, even before Xerox made theirs. Absolutely revolutionary!:
 
 {{||$:/neal/youtube_video}}</pre>
+</div>
+<div created="20210604112305728" draft.of="NPC Party - Thinking About Evaluation" draft.title="NPC Party - Thinking About Evaluation" modified="20210604122644052" tags="[[NPC Party]] Blog Programming Portfolio [[Parallel Processing]] [[Data Oriented]]" title="Draft of 'NPC Party - Thinking About Evaluation'">
+<pre>Alright, got a lot more cleaned up in the Members_t and Member_t. However, I realized I need to step away from those types for a bit because I was getting myopic. I need to think about how evaluation is going to be done, and how to make it execute fast. Essentially, that's where the Party_t comes into play. All evaluation needs to be pulled out of all the sub Party types and brought to the top.
+
+So, we will follow a precedence algorithm to cut out extra execution that doesn't need to happen. For instance, if a member is a follower, then the expoee execution can be cut out entirely because follower overrides it. Similarly with settlers. We should design it so that we can just completely skip over those entire blocks of evaluation.
+
+Also, we should evaluate all followers first, and then the rest. We may want to do it in parallel so that there is no obvious slowdown. This means that we've got to make the code //tight// to avoid any deadlocks. We're in a great position to introduce that because we are still writing this entire type along with its subs. There is no time like now than to get the execution model down right. Essentially, we will be evaluating on the unit of the member, so we should just have a lock per member. That will make it easier for other parts of the code to interoperate if they just want to deal with one member, which is often the case especially for dialogue and menu functionality. We want to avoid locking the entire Party_t or collective sub types like Members_t and Settlers_t unless it's necessary, such as when adding or removing a member.
+
+This is quite an intricate process and needs to be thought out as plainly as possible. We may also need to lock Actors as well, and the only way to really do that as far as I know is by using the global Form_t cache lock. For this reason, we may end up not having as much parallel processing as we would like. However, we can fine grain it to alleviate those symptoms which will pretty much take care of that problem, like we did with Fix Blank Names.
+
+Because we can cut out entire types from being evaluated, we want to make sure that even though we are using arrays of structs, that we keep the structs confined to their types, which will make them smaller and faster for them to be read from memory. We don't need to be adding Settler data to the Member data. That will just slow everything down for no reason. We do keep each type's data chunked however, because that data needs to be hot in the cache, seeing how the most common operation that will be worked upon it is evaluation, which touches all of the data in the type if the type can be evaluated. We'll also be evaluating member by member, even when in parallel, so it would be nice to eval those close to each other in the array.
+
+I do think that the parallel maybe should be limited to just the non-followers, or perhaps unattached members, that is, members that currently aren't nearby the player. Those members that are nearby the player need to take precedence, and because most of the time, there will be less than say 32 members, it makes sense to just eval those synchronously, and to do them first.
+
+Another question is how to lay out my sub types, but I think that as long as we maintain separation of the type's data it will be alright in any way. We could have the array of mannequins/expoees on the Members_t seeing how every member also can be an mannequin/expoee, but Followers_t would be distinct because there can only be 16.
+
+Tough decisions to make! I need to keep in mind that every time I add parallelism to the system, I introduce complexity, so it better be worth it. Something we could try is just having a single lock on Party_t which is used by threads that eval the party. That will keep lines of evaluation from stomping on each other in any event, and it will keep dialogue and menuing from screwing with stuff during eval. It will also not freeze the main process from rendering the game, except in those instances where we lock the global Form_t cache, or perhaps when we lock an actor's inventory, but again, those can be so fine grained that it's simply unnoticeable.
+
+I actually think that's the best plan. The dialogue and menuing happening so infrequently compared to evaluation, that I can't help but think a lock per member would be overkill in our use case. Because eval needs to touch every member, if not every sub-type, it makes sense to just lock the entire structure until it's done, //unless// it ends up taking a long time, longer than a second I would say. I doubt that it would on most peoples computers honestly. However, we could speed things up when the entire party is locked, and we can batch eval members in parallel without worrying about locking them, because we can just wait for the threads to finish.
+
+That's the best idea yet honestly, That would mean that we can have only a handful of threads doing a lot of work in parallel and one simple lock that everyone will need to be aware of, instead of a thousand. We also can make Papyrus calls to Party_t latent so that they don't return until after they get the lock and finish executing.</pre>
 </div>
 <div created="20210524000153843" modified="20210524000325921" tags="Autism" title="DSM-5">
 <pre>Diagnostic and Statistical Manual of Mental Disorders</pre>
