@@ -12595,7 +12595,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210604122057934" list="[[NPC Party - Thinking About Evaluation]] Neal [[Hide Your Quests]] [[Karl Jobst - The Biggest Conmen In Video Game History Strike Again!]] [[Playing 10000 Marbles - Marble Machine X Accuracy Test]] [[Marty Friedman - Miracle]] [[Vivaldi - Gloria, All Female Performance]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210604122057934" title="$:/StoryList">
+<div created="20210604131242673" list="[[NPC Party - Thinking About Evaluation]] Neal [[Hide Your Quests]] [[Karl Jobst - The Biggest Conmen In Video Game History Strike Again!]] [[Playing 10000 Marbles - Marble Machine X Accuracy Test]] [[Marty Friedman - Miracle]] [[Vivaldi - Gloria, All Female Performance]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210604131242673" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14616,7 +14616,7 @@ Any time the save game is loaded, we will deserialize the global cache as it was
 
 We separate heavy mods and light mods mostly for efficiency purposes, and they also have to be handled slightly differently. With this information in place, which is stored on the global Plugin_t, we can now verify any form id that we save in the game, from any mod, whether heavy or light, whether the mod is still loaded or not, or whether its mod index has changed or not.</pre>
 </div>
-<div created="20210604112305728" modified="20210604123326375" tags="[[NPC Party]] Blog Programming Portfolio [[Parallel Processing]] [[Data Oriented]]" title="NPC Party - Thinking About Evaluation">
+<div created="20210604112305728" modified="20210604131737435" tags="[[NPC Party]] Blog Programming Portfolio [[Parallel Processing]] [[Data Oriented]]" title="NPC Party - Thinking About Evaluation">
 <pre>Alright, got a lot more cleaned up in the Members_t and Member_t. However, I realized I need to step away from those types for a bit because I was getting myopic. I need to think about how evaluation is going to be done, and how to make it execute fast. Essentially, that's where the Party_t comes into play. All evaluation needs to be pulled out of all the sub Party types and brought to the top.
 
 So, we will follow a precedence algorithm to cut out extra execution that doesn't need to happen. For instance, if a member is a follower, then the expoee execution can be cut out entirely because follower overrides it. Similarly with settlers. We should design it so that we can just completely skip over those entire blocks of evaluation.
@@ -14637,7 +14637,9 @@ I actually think that's the best plan. The dialogue and menuing happening so inf
 
 That's the best idea yet honestly, That would mean that we can have only a handful of threads doing a lot of work in parallel and one simple lock that everyone will need to be aware of, instead of a thousand. We also can make Papyrus calls to Party_t latent so that they don't return until after they get the lock and finish executing.
 
-(I know this reads a little sporadically, but you're getting to see how my brain thinks through the possibilities and narrows down to the right choices. I have the two options to consider, and I'm weighing them even now.)</pre>
+(I know this reads a little sporadically, but you're getting to see how my brain thinks through the possibilities and narrows down to the right choices. I have the two options to consider, and I'm weighing them even now.)
+
+Mmm. Yeah I'm heavily weighing towards the one lock. I just realized that we can lock and unlock per batch of evaluation, meaning that if we do say, 8 in parallel, any dialogue or menuing will have the opportunity to grab the lock after only 8 evaluations, instead of the whole 1024. It may not be &quot;perfectly&quot; fine-grain, but it should be more than sufficient for our purposes. I don't even intend to increase the number of members, even though it's theoretically possible. In fact, I really just want to be done with this mod, so this is a cheaper, easier, sufficient solution for the goal that I have in mind, and if it needs to be changed later it can be, because none of it is serialized. I'm pretty much decided then, this is the game plan unless something else unconceived comes up.</pre>
 </div>
 <div created="20210525095101410" modified="20210528041048367" tags="[[Nyango Star]] Japan Music Drummer Modern Cats" title="Nyango Star - Oh Japan." youtube_id="-UYgORr5Qhg">
 <pre>I'm not kidding when I say this guy is a rock star in Japan right now:
