@@ -14635,7 +14635,7 @@ Any time the save game is loaded, we will deserialize the global cache as it was
 
 We separate heavy mods and light mods mostly for efficiency purposes, and they also have to be handled slightly differently. With this information in place, which is stored on the global Plugin_t, we can now verify any form id that we save in the game, from any mod, whether heavy or light, whether the mod is still loaded or not, or whether its mod index has changed or not.</pre>
 </div>
-<div created="20210605122648442" modified="20210605124730635" tags="Blog Portfolio Programming [[NPC Party]]" title="NPC Party - Parallel Evaluation">
+<div created="20210605122648442" modified="20210605124829019" tags="Blog Portfolio Programming [[NPC Party]] [[Parallel Processing]]" title="NPC Party - Parallel Evaluation">
 <pre>And we now have a working evaluation structure, although it's not quite evaluating anything yet. We've installed a lock on the plugin itself, and it is expected that any code calling into the plugin will lock the plugin and check that it is valid before proceeding with any further execution. Here we can see a thread locking the plugin before evaluating 8 members in parallel:
 
 ```cpp
