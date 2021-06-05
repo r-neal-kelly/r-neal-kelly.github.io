@@ -14635,7 +14635,7 @@ Any time the save game is loaded, we will deserialize the global cache as it was
 
 We separate heavy mods and light mods mostly for efficiency purposes, and they also have to be handled slightly differently. With this information in place, which is stored on the global Plugin_t, we can now verify any form id that we save in the game, from any mod, whether heavy or light, whether the mod is still loaded or not, or whether its mod index has changed or not.</pre>
 </div>
-<div created="20210605122648442" modified="20210605124511610" tags="Blog Portfolio Programming [[NPC Party]]" title="NPC Party - Parallel Evaluation">
+<div created="20210605122648442" modified="20210605124730635" tags="Blog Portfolio Programming [[NPC Party]]" title="NPC Party - Parallel Evaluation">
 <pre>And we now have a working evaluation structure, although it's not quite evaluating anything yet. We've installed a lock on the plugin itself, and it is expected that any code calling into the plugin will lock the plugin and check that it is valid before proceeding with any further execution. Here we can see a thread locking the plugin before evaluating 8 members in parallel:
 
 ```cpp
@@ -14700,7 +14700,7 @@ We separate heavy mods and light mods mostly for efficiency purposes, and they a
 
 I'm tired out today. My eyelids are super heavy and I need to sleep. But I also thought it worth mentioning that we finally got NPC Party to compile again. It's been several if not more days and it gets really depressing when one lets a non-compiling program go too long, at least in my experience. When I got the thing running, I was elated to find that not only is the save file being created, written to, and read without any crashes to speak of, but the evaluation loop was spinning every two seconds flawlessly, even with all the threading. It was so unnoticeable that I didn't even realize it was running until I thought about it later. I've also begun putting all of my Settler data into formation, which is really fun. It's the primary reason I realized that my own save file was necessary. It had become next to impossible to store all the data I want to store to make the Settlers just absolutely amazing, even in comparison to the beta version. Now, it's fun again, and super easy to ponder how I want to set it up as opposed to how I //must// set it up, and in a wonky way at that, to get it to be saved in Papyrus.
 
-Tired.</pre>
+Tired. I am looking forward to having some more fun with my new regex C library this coming Sabbath. I want to get all my string types going, and make it so they can convert between each other with ease, and also so that we can iterate unicode point by unicode point without having to convert the entire string to u32 first. Iteration will need to be done forwards and backwards if we are to live up to my original C library.</pre>
 </div>
 <div created="20210604112305728" modified="20210604131737435" tags="[[NPC Party]] Blog Programming Portfolio [[Parallel Processing]] [[Data Oriented]]" title="NPC Party - Thinking About Evaluation">
 <pre>Alright, got a lot more cleaned up in the Members_t and Member_t. However, I realized I need to step away from those types for a bit because I was getting myopic. I need to think about how evaluation is going to be done, and how to make it execute fast. Essentially, that's where the Party_t comes into play. All evaluation needs to be pulled out of all the sub Party types and brought to the top.
