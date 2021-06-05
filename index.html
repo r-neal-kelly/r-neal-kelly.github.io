@@ -1123,8 +1123,6 @@ Error message and password prompt
 
 <li>Douglas Engelbart - The Mother of All Demos</li>
 
-<li>Draft of 'Big O Notation'</li>
-
 <li>DSM-5</li>
 
 <li>Dysthymia Disorder</li>
@@ -12608,7 +12606,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210605135051918" list="[[Draft of 'Big O Notation']] Neal [[Hide Your Quests]] [[Karl Jobst - The Biggest Conmen In Video Game History Strike Again!]] [[Playing 10000 Marbles - Marble Machine X Accuracy Test]] [[Marty Friedman - Miracle]] [[Vivaldi - Gloria, All Female Performance]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210605135051918" title="$:/StoryList">
+<div created="20210605135051918" list="[[Big O Notation]] Neal [[Hide Your Quests]] [[Karl Jobst - The Biggest Conmen In Video Game History Strike Again!]] [[Playing 10000 Marbles - Marble Machine X Accuracy Test]] [[Marty Friedman - Miracle]] [[Vivaldi - Gloria, All Female Performance]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210605135051918" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -13915,7 +13913,7 @@ Here's an [[old YouTube|https://www.youtube.com/user/BenDrakeMusic]] of his.
 
 I'm afraid Ben has gone done a dark path as of late. It's actually hard to keep track of him and what he's up to as the years go by. He moves from place to place, and since I've last looked him up, I'm afraid he may not be coming back from the path he's walking down. I hope he'll turn out alright. [[Depression]] is a real killer. If only he knew how important he is to people, even people like me whom he's never met. His music changed my life for the better!</pre>
 </div>
-<div created="20210605125406876" modified="20210605135650124" tags="Programming" title="Big O Notation">
+<div created="20210605125406876" modified="20210605140006826" tags="Programming" title="Big O Notation">
 <pre>I just wanted to jot down some information that may come in handy during an interview process. Hopefully this will help me remember the correct notation, which I'm not used to using. Of course the concept is understandable enough and I'll speak a little to that as well. Big O Notation is a way of notating the complexity of an algorithm as it scales with the number of inputs (n).
 
 O(1) means that the algorithm doesn't increase in complexity but rather remains constant. Hence it is also known as constant time. Accessing a plain array, pushing and popping, these are constant time.
@@ -13928,7 +13926,7 @@ O(n log n) is not as good, because it has a factorial quality, however to speak 
 
 Finally we come to the last three, which are so bad that they are quite unaccepable. We have what is called quadradic time, exponential time, and factorial time. Quadradic or O(n^2) scales in complexity according to the increase of the base whereas exponential O(2^n) scales in complexity according to the increase of the exponent. Both are bad, but exponential is way worse. It should be noted that the base or exponent can be greater than 2 in either case, and they still follow under the same category, so O(n^60) is still quadratic and O(60^n) exponential, because the scaling occurs due to the increase of n.
 
-And then the last is factorial O(n!) which...I'm not even sure how to describe how bad it is, but it's bad. It's like trying every permutation of an algorithm each time you increase n. Ouch!
+And then the last is factorial O(n!) which...I'm not even sure how to describe how bad it is, but it's bad. It would be like iterating over every permutation of an array's data each time you increase n. Ouch!
 
 It's been said that most problems are thought to be in realm of exponential, and therefore impossible for modern computers to solve. But I guess there must be a lot of problems in the world, because we keep finding new ones to solve with computers! Or if you're like me, you have fun resolving old ones too.</pre>
 </div>
@@ -14093,23 +14091,6 @@ Thompson elaborates the reality of how GREP was written:
 <pre>This guy really deserves more credit! What an amazing man. And this is his Mother of All Demos. Not only did he create the mouse with his team, but they are also responsible for the first real visual UI, even before Xerox made theirs. Absolutely revolutionary!:
 
 {{||$:/neal/youtube_video}}</pre>
-</div>
-<div created="20210605125406876" draft.of="Big O Notation" draft.title="Big O Notation" modified="20210605135944760" tags="Programming" title="Draft of 'Big O Notation'">
-<pre>I just wanted to jot down some information that may come in handy during an interview process. Hopefully this will help me remember the correct notation, which I'm not used to using. Of course the concept is understandable enough and I'll speak a little to that as well. Big O Notation is a way of notating the complexity of an algorithm as it scales with the number of inputs (n).
-
-O(1) means that the algorithm doesn't increase in complexity but rather remains constant. Hence it is also known as constant time. Accessing a plain array, pushing and popping, these are constant time.
-
-O(n) means that the algorithm scales in direct proportion to the number of inputs, hence it is also known as linear time. This is often acceptable with small numbers or in the short term, but not desirable in the long term, especially if the inputs are known to increase in the future. Just blindly searching through an array to find if an element is in the array or not is linear.
-
-O(log n) is a highly desirable complexity scale, because the complexity actually //decreases// with more inputs. It's also called logarithmic time. The classic example is the binary search. Of course, we ignore the sorting operation necessary to get the array ready for the binary search, so there's more work than one might think, but in the case of the binary search, it's great when the data rarely if ever changes and you just have to do the one sort up front. The pay off is huge.
-
-O(n log n) is not as good, because it has a factorial quality, however to speak well of it, Quicksort falls under this category, so it's pretty good, but it's not as good a linear time to put it in perspective. I find this one a little confusing honestly. I think it's short hand for something like O(log n) + O(log n - 1) + ... + O(log 1).
-
-Finally we come to the last three, which are so bad that they are quite unaccepable. We have what is called quadradic time, exponential time, and factorial time. Quadradic or O(n^2) scales in complexity according to the increase of the base whereas exponential O(2^n) scales in complexity according to the increase of the exponent. Both are bad, but exponential is way worse. It should be noted that the base or exponent can be greater than 2 in either case, and they still follow under the same category, so O(n^60) is still quadratic and O(60^n) exponential, because the scaling occurs due to the increase of n.
-
-And then the last is factorial O(n!) which...I'm not even sure how to describe how bad it is, but it's bad. It would be like iterating over every permutation of an array's data each time you increase n. Ouch!
-
-It's been said that most problems are thought to be in realm of exponential, and therefore impossible for modern computers to solve. But I guess there must be a lot of problems in the world, because we keep finding new ones to solve with computers! Or if you're like me, you have fun resolving old ones too.</pre>
 </div>
 <div created="20210524000153843" modified="20210524000325921" tags="Autism" title="DSM-5">
 <pre>Diagnostic and Statistical Manual of Mental Disorders</pre>
