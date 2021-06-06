@@ -1219,6 +1219,8 @@ Error message and password prompt
 
 <li>Nikola Tesla</li>
 
+<li>NPC Party - Beautiful Successes This Day</li>
+
 <li>NPC Party - Began Our Own Serialization</li>
 
 <li>NPC Party - Easily Saved Forms, Progress with Member_t</li>
@@ -12606,7 +12608,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210605140605817" list="[[Big O Notation]] Neal [[Hide Your Quests]] [[Karl Jobst - The Biggest Conmen In Video Game History Strike Again!]] [[Playing 10000 Marbles - Marble Machine X Accuracy Test]] [[Marty Friedman - Miracle]] [[Vivaldi - Gloria, All Female Performance]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210605140605817" title="$:/StoryList">
+<div created="20210606115028976" list="[[NPC Party - Beautiful Successes This Day]] Neal [[Hide Your Quests]] [[Karl Jobst - The Biggest Conmen In Video Game History Strike Again!]] [[Playing 10000 Marbles - Marble Machine X Accuracy Test]] [[Marty Friedman - Miracle]] [[Vivaldi - Gloria, All Female Performance]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210606121044222" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14379,6 +14381,21 @@ While not your traditional blog, this site follows the [[Zettelkasten]] way of c
 </div>
 <div created="20210524043006042" modified="20210524043127260" tags="Science Autism" title="Nikola Tesla">
 <pre>My favorite scientist! I'll definitely be talking more about him.</pre>
+</div>
+<div created="20210606115042916" modified="20210606121623215" tags="Blog Programming [[Parallel Processing]] [[NPC Party]] Portfolio Chiptune" title="NPC Party - Beautiful Successes This Day">
+<pre>I normally don't have such a happy ending to my week as I'm wrapping up to take Sabbath. Ah, I'm so happy with the progress on NPC Party today. We've basically got the toughest structure done in the program. We now have a beautiful set of types with which to add our behaviors and they interlink with each very nicely.
+
+We even got the Settler_t data in place and it serializes so wondrously. The pattern that we are following itself has greatly assisted in this process, it's just so natural for the data. What I was trying to do with Papyrus before was a losing game, but now I've got my own save file, I can put the data how it ought to be. It's so relieving to get that part out of the way.
+
+And we got a compiling program again, and all the Party types and their sub types are well-defined. We even found a great parallel pattern for accessing sub types from other sub types. For example, because the Follower_t depends on the Member_t, we've made it so that in order for it to be active, it must have a valid Member_ID_t that is also active. Because it has the id, all it needs to do is look in the Members_t array of Member_t, which doesn't need to be locked individually when you've got the plugin lock. A thousand threads or more could do this all at the same time in Parallel without a second lock. This means it's free game for anyone with the lock, such as the Party_t's Evaluate method which spawns 8 threads at a time to have at it. If we add a Horse_t, because it depends on the Follower_t, we can just follow the same pattern, in that it needs a valid Follower_t id, and through there it will have the valid Member_t id..
+
+In the event that there is the rare occasion when we need to change shared data during say, eval, we can just use that parallel lock I'm passing through the Party's eval to the sub evaluators. It's a get out a jail free card honestly. I hope to not need to use it, and to continue this trend of parallel processing with just the one plugin lock, and done in a granular approach so that when dialogue or menuing wants to say, add a member, it can get the lock pretty quickly. Having the one plugin lock essentially allows each line of execution to develop its own locking strategies, which frees the default structure of the program from being over rigorous with locks.
+
+I'm just so happy with this pattern that we've achieved. I think it's going to work so well, as it's already paying off. //And it just makes me feel happy//, I don't know how else to explain it. There is something absolutely beautiful about how the execution flow occurs and how the data is laid out in both main memory and the hard disk. I'm very pleased and am expecting more progress next week!
+
+Also, this music helps when programming:
+
+{{$:/Chiptune/Krelez/Random Chiptune Mix 51}}</pre>
 </div>
 <div created="20210601123720135" modified="20210601130117823" tags="[[NPC Party]] Programming Portfolio Blog Serialization" title="NPC Party - Began Our Own Serialization">
 <pre>This is something that I've really been needing to do for a while now, it's just taken a lot of steps to get here. So essentially, we are now saving our own .npcp file that goes neck and neck with the main game's .ess file and SKSE's .skse file. We will be storing all of own data by serialization, which has some drawbacks in that it's not as robust as other methods, but its advantages in my opinion far outweigh its defects.
