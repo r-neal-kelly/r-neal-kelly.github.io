@@ -1221,6 +1221,8 @@ Error message and password prompt
 
 <li>Nikola Tesla</li>
 
+<li>NPC Party - Adding and Removing Basics and Library Locks</li>
+
 <li>NPC Party - Beautiful Successes This Day</li>
 
 <li>NPC Party - Began Our Own Serialization</li>
@@ -12611,7 +12613,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210606230010617" list="[[Big O Notation]] Neal [[Hide Your Quests]] [[Karl Jobst - The Biggest Conmen In Video Game History Strike Again!]] [[Meganeko - Daydreamer]] [[Playing 10000 Marbles - Marble Machine X Accuracy Test]] [[Marty Friedman - Miracle]] [[Vivaldi - Gloria, All Female Performance]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210606230206405" title="$:/StoryList">
+<div list="[[NPC Party - Adding and Removing Basics and Library Locks]] Neal [[Hide Your Quests]] [[Karl Jobst - The Biggest Conmen In Video Game History Strike Again!]] [[Meganeko - Daydreamer]] [[Playing 10000 Marbles - Marble Machine X Accuracy Test]] [[Marty Friedman - Miracle]] [[Vivaldi - Gloria, All Female Performance]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14389,6 +14391,11 @@ While not your traditional blog, this site follows the [[Zettelkasten]] way of c
 </div>
 <div created="20210524043006042" modified="20210524043127260" tags="Science Autism" title="Nikola Tesla">
 <pre>My favorite scientist! I'll definitely be talking more about him.</pre>
+</div>
+<div created="20210609143548018" modified="20210609145724694" tags="Blog Portfolio [[NPC Party]] Programming C++ Skylib" title="NPC Party - Adding and Removing Basics and Library Locks">
+<pre>Yesterday we got the basic structure of adding and removing sub types going, although their definitions needs to be filled in with more behaviors settings/resettings. Wasn't feeling too great Sunday and I don't feel too great now. I'm currently trying to formalize a more sure way of locking primarily the extra data on a reference/cell/etc. and secondarily the forms themselves. It's not clear to me how the game expects these locks to be used. I'm trying to find information about design patterns with locks to see if it's a pattern that I don't know about. The main one to tackle is the extra data I think. It's the one that really can cause trouble because it's a linked list of linked lists of pointers, so there's bound to be memory management issues unless it's properly locked. Forms themselves may also suffer this problem depending on what lives in their footprint, but it's not clear to me at all how to properly lock them except by using the global form cache lock, which I've found to be very helpful when dealing with the effects of concurrent threads not playing nicely so I have good reason to think it plays a bigger role than just adding and removing forms. I'm wondering if the best implementation just leaves the locking completely up to the end user. We can pass locks to indicate that locking is probably a good idea when using this or that function. It's just super tedious is all. But to me, it's the most straightforward answer at this moment, and in addition, if we are going to we should lock the form cache before attempting to lock the extra data. I don't know if that's necessary because I'm not convinced that the original game uses both at the same time in such a way. However, I would follow the hierarchy just in case it actually would avoid a potential deadlock. Very tired. Feeling depressed. But we still make progress somehow.
+
+I am happy to report that a brave soul, kjack999 on NexusMods, is trying to port Hide Your Quests to the VR version of Skyrim. I'm quite impressed with his attempts thus far, he's definitely got what it takes. I'll try to keep helping him along if/when he needs it. It's good to see people learning C++, because despite all of its flaws, there's nothing that I'm aware of that has actually taken its place yet, and whatever that will end up being, it has some big shoes to fill.</pre>
 </div>
 <div created="20210606115042916" modified="20210606121623215" tags="Blog Programming [[Parallel Processing]] [[NPC Party]] Portfolio Chiptune" title="NPC Party - Beautiful Successes This Day">
 <pre>I normally don't have such a happy ending to my week as I'm wrapping up to take Sabbath. Ah, I'm so happy with the progress on NPC Party today. We've basically got the toughest structure done in the program. We now have a beautiful set of types with which to add our behaviors and they interlink with each very nicely.
