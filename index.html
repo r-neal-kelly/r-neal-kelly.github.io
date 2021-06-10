@@ -14963,8 +14963,8 @@ I still need to write the part that fetches the string to replace the tag with. 
 
 {{Bantock's Pagan Symphony - 2019}}</pre>
 </div>
-<div created="20210610111128631" modified="20210610114943955" tags="Skylib Skyrim Blog Portfolio [[Parallel Processing]] Programming Concurrent Parallel" title="Skylib - A Better Way to Lock">
-<pre>Okay, I've done a lot of tests and api tweaks in an attempt to achieve a better way of working with Extra Data on References and Container Changes and other types which they appear on. I think I've finally found a good solution. This system was designed so that all references, which have this extra data, are capable of being executed upon in parallel. However, it's possible that another reference executing in parallel may need to access the extra data of the reference. So they each have a lock.
+<div created="20210610111128631" modified="20210610115153675" tags="Skylib Skyrim Blog Portfolio [[Parallel Processing]] Programming Concurrent Parallel" title="Skylib - A Better Way to Lock">
+<pre>Okay, I've done a lot of tests and api tweaks in an attempt to achieve a better way of working with Extra Data on References and Container Changes and other types which they appear on. I think I've finally found a good solution. Skyrim was designed so that all references, which have this extra data, are capable of being executed upon in parallel. However, it's possible that another reference executing in parallel may need to access the extra data of the reference. So they each have a lock.
 
 I think that the renderer has a super lock that it uses before touching references and other forms, and that is probably the global form cache lock, but I'm still fuzzy on that and whether or not it's dependable generally because I doubt everyone who makes an SKSE plugin is using it properly, and maybe not everything in the vanilla game either. But possibly.
 
