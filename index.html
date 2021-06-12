@@ -1287,6 +1287,8 @@ Error message and password prompt
 
 <li>Skylib - Reference_t::Extra_t</li>
 
+<li>Skylib - Reference_tt and Actor_tt</li>
+
 <li>Skylib: Contained References</li>
 
 <li>Socrates</li>
@@ -12623,7 +12625,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210612102424106" list="Neal [[Hide Your Quests]] [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Marty Friedman - Miracle]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Traversy Media - 10 Ways to Make Money as a Developer]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[Eskil Steenberg - How I Program C]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Max Derrat - Autism and Liars (The Worst Thing I Ever Did)]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210612102424106" title="$:/StoryList">
+<div list="[[Skylib - Reference_tt and Actor_tt]] Neal [[Hide Your Quests]] [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Marty Friedman - Miracle]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Traversy Media - 10 Ways to Make Money as a Developer]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Max Derrat - Autism and Liars (The Worst Thing I Ever Did)]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -15064,6 +15066,27 @@ I'm of the belief that this is one of the best C++ types that I've ever come up 
 We've also added a No_Locker_t which implements the virtual interface, but doesn't actually lock anything. Useful when a super lock is in use and one doesn't need to lock. I like to have to pass it because it becomes super clear that we don't want to lock this and thus do not have to question what the internals of whoever we're passing it to does. Very nice!
 
 I'll probably post some code examples of the new interface tomorrow. I'm very tired out now. It's been tough designing this, but I think that we've nailed it and will benefit immensely from it. It so much harder for the user to make a mistake, and yet it's still super easy and malleable to use.</pre>
+</div>
+<div created="20210612103022308" modified="20210612110520332" tags="Blog Programming Skylib Portfolio Parallel Concurrent" title="Skylib - Reference_tt and Actor_tt">
+<pre>So I found that the Reference_t::Extra_t was just not enough to really handle the full features of the Reference_t, which also supports using console commands, virtual functions, and havok related functionality in its methods. We really need to design around these as well. So I've taken the successful Extra_t design and expanded it to encompass the entire Reference_t and its descendants as well. Thus we now have the Reference_tt, similar to the Virtual::Variable_tt which is a helper class that wraps Virtual::Variable_t. The size of Reference_tt is currently six u64s (words) wide. This is the only real drawback to expanding the Extra_t to encompass the entire Reference_t, that being that every time you create the Reference_tt, which may sometimes only be done for a single method, it will have to take up 48 bytes. However, this is a small price to pay, because with this type you don't have to think about its interior locks, only how you want to arrange you macro locking behavior. You can still break up the locks for a more granular spread, but it will cost more time to write the 48 bytes. It's probably not a big deal.
+
+This helper type tries really hard to free locks when calling into a virtual function or Skyrim binary function, and to relock to maintain the pattern that our own custom functions have. I'm not currently locking the CRITICAL_SECTION that is likely havok related. But in the future, we may want to lock that when using any function that is not our own, which appears to be dealing with havok types. This means that we need to have our helper type unlock both that and the extra data lock necessary, and to relock appropriately after. I think we will ignore that lock for now until we know more about it, but we need to make sure that our helper type can easily integrate the new lock. This will eventually make the helper's footprint even bigger, but dammit, we need that stability.
+
+I really don't know if all these locks were so necessary! I think they may have over optimized, but here they are and we have to deal with them. It's hard to figure out how they are being used in their design. I would //think// that the there should be a lock that can lock the entire reference structure making any of its internal locks superfluous unless we wanted to be more granular. The global form cache lock may very well act as that single lock. But it's hard to prove, it's beyond me at this time, so we'll just do the granular thing.
+
+Since we have to support at least a handful of virtual function calls, it makes the helper type Reference_tt even more difficult. Essentially, our assumption is that the callback of the virtual is expected to handle its own helper function if it needs one, and that the one that spawns the virtual function will be destroyed at the end of the scope that's using it. It's not intended to be cached in any manner, so hopefully that's understood from the user perspective. Of course there will be a ton of examples in the library and in my applications so it wouldn't be hard to figure out. I maybe should leave a comment to explain how to properly use it. Maybe in the example plugin!
+
+Sorry for the lack of code examples. My code base is currently in a mess because this is a very invasive change. But we need to do it to properly complete NPC Party, which critically depends on locking these structures as perfectly as possible. From what I can tell, this helper type will make Skylib the superior library to use when working with references, which is necessary to make for a super-stable user experience.
+
+In this order:
+
+# It must be correct and do what it's supposed to do.
+# It must be stable and avoid crashes and freezes as much as possible.
+# It must be easy to read and understand, to avoid having to grasp what the lockers are doing all the time, so one can think meta.
+# It must be performant and avoid unnecessary computations that give no return in the above three points.
+# It must be long term, I don't //ever// want to change this type out for a new one.
+
+Thanks for reading. You can get a pretty good idea looking over my past blog entries just how difficult it's been trying to achieve this, especially with someone else's massive codebase that is not fully understood.</pre>
 </div>
 <div created="20210529015800034" modified="20210529021349655" tags="Programming Portfolio Blog Skylib C++ Code" title="Skylib: Contained References">
 <pre>It's nice to be able to create such a short and sweet function when dealing with Extra_Container_Changes_t. Usually, it's a lot more convoluted because this type represents one of the most complicated parts of Skyrim's game model: container inventories.
