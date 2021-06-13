@@ -1289,6 +1289,8 @@ Error message and password prompt
 
 <li>Skylib - Reference_tt and Actor_tt</li>
 
+<li>Skylib - Reverted Changes to Make Micro Updates</li>
+
 <li>Skylib: Contained References</li>
 
 <li>Socrates</li>
@@ -12625,7 +12627,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div list="[[Skylib - Reference_tt and Actor_tt]] Neal [[Hide Your Quests]] [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Marty Friedman - Miracle]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Traversy Media - 10 Ways to Make Money as a Developer]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Max Derrat - Autism and Liars (The Worst Thing I Ever Did)]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" title="$:/StoryList">
+<div list="[[Skylib - Reverted Changes to Make Micro Updates]] Neal [[Hide Your Quests]] [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Marty Friedman - Miracle]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Traversy Media - 10 Ways to Make Money as a Developer]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Max Derrat - Autism and Liars (The Worst Thing I Ever Did)]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -15087,6 +15089,25 @@ In this order:
 # It must be long term, I don't //ever// want to change this type out for a new one.
 
 Thanks for reading. You can get a pretty good idea looking over my past blog entries just how difficult it's been trying to achieve this, especially with someone else's massive codebase that is not fully understood.</pre>
+</div>
+<div created="20210613150655413" modified="20210613153724538" tags="Blog Skyrim Skylib Programming Parallel Concurrent Portfolio" title="Skylib - Reverted Changes to Make Micro Updates">
+<pre>Well, I reverted all the changes I had made to Skylib in the past four days. But it was not a total waste, as I've learned a lot of patterns that can come in handy as I make micro updates. And I certainly know what //not// to do better than I did before. I decided to revert changes because it had gotten to the point that I wasn't able to compile during that four day period, and thus I was unable to do any tests to find answers to my many questions. What a relief it was when I was able to execute again! Going too long without executing gets very depressing so I had to take some steps back.
+
+Now that I've been able to do tests again I've already discovered some very important info that I wouldn't have known otherwise. When working in the confines of a single thread, It's safe to call the Read Lock at any point, but it is //not// safe to call the Write Lock when the Read Lock is in effect. So this leads me to believe that these locks are intended to be called in their own threads away from the main process, which is where I think the SKSE instance inhabits. Any events we get from SKSE seem to be on the main process, although I'm not certain. This means for ultimate stability, we should always spin up our own thread for all events after initialization, no matter where they come from.
+
+It's also possible that the locking behavior in all of the vanilla functions follows the unwritten, perhaps easy to mess up rule that any read-like operations cannot alter any state, and that all methods have a well defined barrier around one another so that they can only call other read-like operations. I'm sure this can make for faster code, but I think it would be easy to mess up, even when strictly executing in const methods. There are a lot of pointers past that lock, potentially a nearly endless amount of pointers.
+
+So the absolute safest thing to do, because I've not been able to determine the locking behavior of native C++ functions any further, is to always spin up a thread per event and always use the write lock, except in very selective cases that we can (somehow) be sure that we won't be trying to write anything. It just seems too risky otherwise.
+
+Skyrim is considered by many to be a bugfest to begin with, and I'd really like to avoid adding any crashes or freezes. It seems like the safest option then is to be somewhat less efficient (I doubt that it would be very much.)
+
+For NPC Party, unless it's our own state, we are almost always writing at least once to references/actors rather than reading, so it makes sense to just use the write lock upfront and not worry about how anyone else calls a lock, because at that point it can't really be screwed up when using RAII. That should cover the extra data question then.
+
+Sabbath is here, I hope I can enjoy it better this week. I don't really want to fall into depression again like last week. Maybe I can touch on my C library and do some fun stuff with UTF encoding/decoding. I do enjoy that stuff.
+
+I looked up an old friend last night and was surprised that I was actually able to find him. I'm wondering if I should try to contact him and let him know what I've been up to. Right before I looked him up, I was ready to give up programming altogether because I was having such a hard time with not being able to compile (the revert made everything better almost instantly, thanks git and GitHub!) But at the time, I wondered why I even got into programming in the first place and I remembered how it was he that suggested I would be a natural programmer. I always thought of him as the smartest among my group of friends, including myself. I think he learned how to program before we even left high school, and he was always learning. He deeply inspired me, as he not only planted the seed in my mind to become a programmer myself, albeit nearly a decade later, but he also inspired me to keep learning even after school and to never stop. He showed how so much information is available online. I never did stop learning since that time. Thanks Tim, maybe I'll drop you a line soon. I think you would be happy to know that I finally took your advice and have been programming for about five years now.
+
+</pre>
 </div>
 <div created="20210529015800034" modified="20210529021349655" tags="Programming Portfolio Blog Skylib C++ Code" title="Skylib: Contained References">
 <pre>It's nice to be able to create such a short and sweet function when dealing with Extra_Container_Changes_t. Usually, it's a lot more convoluted because this type represents one of the most complicated parts of Skyrim's game model: container inventories.
