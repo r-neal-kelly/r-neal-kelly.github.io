@@ -1269,6 +1269,8 @@ Error message and password prompt
 
 <li>Quest Lookup - Text Substitution</li>
 
+<li>regex - We now have a string_t.</li>
+
 <li>Respighi</li>
 
 <li>Rodrigo DB</li>
@@ -12627,7 +12629,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div list="[[Skylib - Reverted Changes to Make Micro Updates]] Neal [[Hide Your Quests]] [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Marty Friedman - Miracle]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Traversy Media - 10 Ways to Make Money as a Developer]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Max Derrat - Autism and Liars (The Worst Thing I Ever Did)]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" title="$:/StoryList">
+<div list="[[regex - We now have a string_t.]] Neal [[Hide Your Quests]] [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Marty Friedman - Miracle]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Traversy Media - 10 Ways to Make Money as a Developer]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Max Derrat - Autism and Liars (The Worst Thing I Ever Did)]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14961,6 +14963,34 @@ I still need to write the part that fetches the string to replace the tag with. 
 </div>
 <div created="20210520165056733" modified="20210524044522338" tags="[[Quest Lookup]] NexusMods Portfolio Programming" title="Quest Lookup - Text Substitution">
 <pre>The first real snag in Quest Lookup has reared its ugly head. Essentially, text substitution needs to be done before handing off string to ActionScript for further processing. It makes sense, but I have no idea where the function that handles substitution would be located. I could go through the laborious process of trying to find it, as there is probably a non-virtual method on Quest_t that handles it, perhaps even Quest_Objective_t, but I think I can get something working faster if I just create my own function to handle it for objectives in particular, an not worry about all the other places substitution can occur at this time (e.g. books). The biggest hurdle to doing it myself is I don't yet know how to handle other languages such as Russian when it comes to replacing pronouns. At this time, I think that I will simply replace pronoun tags when English is the current language and leave pronoun tags alone else wise. It's the only course of action that I can follow at the moment and know that I can get some results relatively quickly.</pre>
+</div>
+<div created="20210617121938299" modified="20210617124317735" tags="Blog C Programming [[Regular Expressions]] Code" title="regex - We now have a string_t.">
+<pre>Yes! I've been working at my C regex library for the past 5 or so days, and in that time I've been developing a custom string_t that can use any unicode encoding, and is expandable to just about every thinkable encoding out there. Its current limitations are three-fold:
+
+# The decoded point must fit within 32 bits (this may be increased to u64 if I ever drop support for the 32bit library)
+# The encoded sequence must fit within 56 bits, the latter 8 being reserved for how many units were read from the string in your interface.
+# The lingua franca is the unicode points. Meaning, your decoded symbol should probably be converted to match unicode's if possible, else you'll only be able to use your family of interfaces safely. Therefore it's a soft requirement, and not actually necessary, but helpful for dealing with other interfaces or processes.
+
+So with those requirements, you can easily have an ascii interface, a ucs-2 interface, and probably others that I don't even know about.
+
+Anyways, the program needs to have a lot of tests developed for it, being a C program and all. One thing I dislike about C is the weak type system, but it comes with the territory. I do prefer C++ in that respect. Of course, it's no where near as bad as JavaScript!
+
+Here's a code snippet of the new string_t's iterator in use:
+
+```c
+    for (string_iterator_t iter = string_first(&amp;string); !string_is_end(&amp;iter); string_next(&amp;iter)) {
+        u32_t point = string_point(&amp;iter);
+        wprintf(L&quot;unit_idx: %zu, point_idx: %zu is %8.8X\n&quot;, iter.unit_index, iter.point_index, string_point(&amp;iter));
+    }
+```
+
+The part of the library I'm currently most happy with (although I need to do some stress tests for it) is the reading of UTF-8, UTF-16, and UTF-32 and properly handling any errors. I'm following the Unicode standard to the letter in this part, and it's pretty efficient! Most happily, any UTF string can be read forwards and in reverse, and still maintain the same error handling and get the same exact results. We need this in the library because I want to support look-behinds that are as fast and efficient as look-aheads in my regex engine (and hopefully I'll get to that part of the program this time! As compared to my failed C++ attempt way back when.)
+
+On another note, I'm feeling kind of crappy today. Even though I've made a lot of progress in the C library, for some reason I'm not feeling too great. It's probably something to do with [[Autism]] or [[Depression]]. It's probably linked to having a bug in the debug build of the regex library and that I'm hesitant to communicate with people recently. In fact I had to make myself write this blog entry, although I'm glad I did! I've also not worked on my Skylib - NPC Party project since last week. I've got to take another stab at the locking situation, and maybe what I'll do is just lock the actor's extra data in write mode immediately. So I just need to clear up the library code to make sure there's no conflict in doing that. I also need to review my last blog entry which goes into the tests results with the locking system. I think it's always safe for a new thread to call write lock and just leave it at that, but it doesn't hurt to double check. Once I've gotten that gnarly business out of the way I can begin developing my behaviors again and hopefully get that darn program out of the oven!
+
+I also went through a period this past five days where I didn't sleep for about 30 or so hours (probably more.) I also didn't eat that much. That may have made me feel crappier than I normally would. I heard that lot of programmers are like that. There's something about getting in the thick of a codebase and staying up too late. I just want to get everything done, but it seems impossible sometimes! Of course, I'm only one person, and maybe I should go easier on myself.
+
+Anyway, that's the blog entry for today.</pre>
 </div>
 <div created="20210524004434524" modified="20210524004452394" tags="Italian Music Impressionism" title="Respighi">
 <pre></pre>
