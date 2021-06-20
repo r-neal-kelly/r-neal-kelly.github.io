@@ -1271,6 +1271,8 @@ Error message and password prompt
 
 <li>regex - Happy with my C string_t and charcoder_i</li>
 
+<li>regex - Read UTF-8 Forwards or Backwards</li>
+
 <li>regex - We now have a string_t.</li>
 
 <li>Respighi</li>
@@ -12610,8 +12612,8 @@ Error message and password prompt
 <div created="20210520171436640" modified="20210528153840181" title="$:/state/tab--959111941">
 <pre>$:/core/ui/ControlPanel/Stylesheets</pre>
 </div>
-<div created="20210520062243477" modified="20210612101336313" title="$:/state/tab-1749438307">
-<pre>$:/core/ui/ControlPanel/Info</pre>
+<div created="20210520062243477" modified="20210620112043041" title="$:/state/tab-1749438307">
+<pre>$:/core/ui/ControlPanel/Saving</pre>
 </div>
 <div created="20210520062830743" modified="20210522051152428" title="$:/state/tab-2065006209">
 <pre>$:/core/ui/ControlPanel/Saving/GitHub</pre>
@@ -12631,7 +12633,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div list="[[regex - Happy with my C string_t and charcoder_i]] Neal [[Hide Your Quests]] [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Marty Friedman - Miracle]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Traversy Media - 10 Ways to Make Money as a Developer]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Max Derrat - Autism and Liars (The Worst Thing I Ever Did)]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" title="$:/StoryList">
+<div created="20210620112040868" list="[[regex - Read UTF-8 Forwards or Backwards]] Neal [[Hide Your Quests]] [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Marty Friedman - Miracle]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Traversy Media - 10 Ways to Make Money as a Developer]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Max Derrat - Autism and Liars (The Worst Thing I Ever Did)]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210620112040868" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14980,6 +14982,358 @@ Now in C++, you can still use a virtual base class to do all of this, but one of
 Compare this to C. Every time you do any kind of dynamic dispatch, which is what a virtual method is at the end of the day, you know about it, and you know it's cost, because you manually have to type it out and design it by hand. Every time you make a macro, you want to make it small because it's a pain in the butt to use &quot;\&quot; for each line break (and ugly too.) You naturally want to make less work for yourself, so you keep it as simple as possible, providing only what is necessary even on the minutest of details, such as not even passing a derived type's pointer to an abstract base class, because it's not really a base class to begin with! Writing dynamic dispatch in C may actually end up being faster than C++'s virtual methods because of these details.
 
 I //love// C++ for its many useful features and advancements. I am not saying that it is inferior to C in every aspect, even though I do think it's inferior in designing one's program, as I've described above. So the take-away is this: with C, you design only what is really needed because it's just too difficult to do it any other way. You can end up with some pretty good design choices because you end up favoring simplicity not just on the developer's level but on the computer's level too, as opposed to most modern languages that simplify things for the developer at the expense of the computer, and thus ultimately their own programs.</pre>
+</div>
+<div created="20210620110534720" modified="20210620111918712" tags="Unicode Programming C Portfolio Blog Code" title="regex - Read UTF-8 Forwards or Backwards">
+<pre>I just wanted to give my favorite piece of code I wrote last week, which can be found in my C regex project. The first function parses a UTF-8 encoded string's subsequence at the current position, and the second function parses the previous subsequence by reading the string backwards. The thing that makes the second function so difficult is not only the variable length of a UTF-8 subsequence, but the fact that we want error handling to be done exactly the same when reading the string in either direction.
+
+I'm very happy with this code because it perfectly follows the Unicode standard v13.0 (the latest as of this writing.) The standard is very helpful, as it provides the first chart you see in the comment called &quot;Well-formed UTF-8 Subsequences.&quot; That data, which is readily available in the standard, improved my original design's efficiency!
+
+```c
+/*
+Well-formed UTF-8 Subsequences:
+    00..7F
+    C2..DF  80..BF
+    E0      A0..BF  80..BF
+    E1..EC  80..BF  80..BF
+    ED      80..9F  80..BF
+    EE..EF  80..BF  80..BF
+    F0      90..BF  80..BF  80..BF
+    F1..F3  80..BF  80..BF  80..BF
+    F4      80..8F  80..BF  80..BF
+*/
+
+/*
+Ill-formed Truncated UTF-8 Subsequences:
+    C2..DF
+    E0
+    E0      A0..BF
+    E1..EC
+    E1..EC  80..BF
+    ED
+    ED      80..9F
+    EE..EF
+    EE..EF  80..BF
+    F0
+    F0      90..BF
+    F0      90..BF  80..BF
+    F1..F3
+    F1..F3  80..BF
+    F1..F3  80..BF  80..BF
+    F4
+    F4      80..8F
+    F4      80..8F  80..BF
+*/
+
+/*
+    Each invalid byte in an ill-formed UTF-8 sequence is replaced with a REPLACEMENT_CHARACTER
+    except truncated UTF-8 subsequences, which are replaced with a single REPLACEMENT_CHARACTER.
+    This holds true when reading a UTF-8 sequence backwards or forwards.
+*/
+
+u8_t utf_8_subsequence_forward(utf_8_subsequence_t* it, const utf_8_t* from)
+{
+    assert(it);
+    assert(from);
+
+    #define read_1()            \
+    {                           \
+        it-&gt;a = *(from + 0);    \
+        it-&gt;unit_count = 1;     \
+        return 1;               \
+    }
+
+    #define read_2()            \
+    {                           \
+        it-&gt;a = *(from + 0);    \
+        it-&gt;b = *(from + 1);    \
+        it-&gt;unit_count = 2;     \
+        return 2;               \
+    }
+
+    #define read_3()            \
+    {                           \
+        it-&gt;a = *(from + 0);    \
+        it-&gt;b = *(from + 1);    \
+        it-&gt;c = *(from + 2);    \
+        it-&gt;unit_count = 3;     \
+        return 3;               \
+    }
+
+    #define read_4()            \
+    {                           \
+        it-&gt;a = *(from + 0);    \
+        it-&gt;b = *(from + 1);    \
+        it-&gt;c = *(from + 2);    \
+        it-&gt;d = *(from + 3);    \
+        it-&gt;unit_count = 4;     \
+        return 4;               \
+    }
+
+    #define replace(READ_UNIT_COUNT_)   \
+    {                                   \
+        it-&gt;a = 0xEF;                   \
+        it-&gt;b = 0xBF;                   \
+        it-&gt;c = 0xBD;                   \
+        it-&gt;unit_count = 3;             \
+        return READ_UNIT_COUNT_;        \
+    }
+
+    if (*(from + 0) &gt;= 0x00 &amp;&amp; *(from + 0) &lt;= 0x7F) {
+        read_1();
+    } else if (*(from + 0) &gt;= 0xC2 &amp;&amp; *(from + 0) &lt;= 0xDF) {
+        if (*(from + 1) &gt;= 0x80 &amp;&amp; *(from + 1) &lt;= 0xBF) {
+            read_2();
+        } else {
+            replace(1);
+        }
+    } else if (*(from + 0) == 0xE0) {
+        if (*(from + 1) &gt;= 0xA0 &amp;&amp; *(from + 1) &lt;= 0xBF) {
+            if (*(from + 2) &gt;= 0x80 &amp;&amp; *(from + 2) &lt;= 0xBF) {
+                read_3();
+            } else {
+                replace(2);
+            }
+        } else {
+            replace(1);
+        }
+    } else if (*(from + 0) &gt;= 0xE1 &amp;&amp; *(from + 0) &lt;= 0xEC) {
+        if (*(from + 1) &gt;= 0x80 &amp;&amp; *(from + 1) &lt;= 0xBF) {
+            if (*(from + 2) &gt;= 0x80 &amp;&amp; *(from + 2) &lt;= 0xBF) {
+                read_3();
+            } else {
+                replace(2);
+            }
+        } else {
+            replace(1);
+        }
+    } else if (*(from + 0) == 0xED) {
+        if (*(from + 1) &gt;= 0x80 &amp;&amp; *(from + 1) &lt;= 0x9F) {
+            if (*(from + 2) &gt;= 0x80 &amp;&amp; *(from + 2) &lt;= 0xBF) {
+                read_3();
+            } else {
+                replace(2);
+            }
+        } else {
+            replace(1);
+        }
+    } else if (*(from + 0) &gt;= 0xEE &amp;&amp; *(from + 0) &lt;= 0xEF) {
+        if (*(from + 1) &gt;= 0x80 &amp;&amp; *(from + 1) &lt;= 0xBF) {
+            if (*(from + 2) &gt;= 0x80 &amp;&amp; *(from + 2) &lt;= 0xBF) {
+                read_3();
+            } else {
+                replace(2);
+            }
+        } else {
+            replace(1);
+        }
+    } else if (*(from + 0) == 0xF0) {
+        if (*(from + 1) &gt;= 0x90 &amp;&amp; *(from + 1) &lt;= 0xBF) {
+            if (*(from + 2) &gt;= 0x80 &amp;&amp; *(from + 2) &lt;= 0xBF) {
+                if (*(from + 3) &gt;= 0x80 &amp;&amp; *(from + 3) &lt;= 0xBF) {
+                    read_4();
+                } else {
+                    replace(3);
+                }
+            } else {
+                replace(2);
+            }
+        } else {
+            replace(1);
+        }
+    } else if (*(from + 0) &gt;= 0xF1 &amp;&amp; *(from + 0) &lt;= 0xF3) {
+        if (*(from + 1) &gt;= 0x80 &amp;&amp; *(from + 1) &lt;= 0xBF) {
+            if (*(from + 2) &gt;= 0x80 &amp;&amp; *(from + 2) &lt;= 0xBF) {
+                if (*(from + 3) &gt;= 0x80 &amp;&amp; *(from + 3) &lt;= 0xBF) {
+                    read_4();
+                } else {
+                    replace(3);
+                }
+            } else {
+                replace(2);
+            }
+        } else {
+            replace(1);
+        }
+    } else if (*(from + 0) == 0xF4) {
+        if (*(from + 1) &gt;= 0x80 &amp;&amp; *(from + 1) &lt;= 0x8F) {
+            if (*(from + 2) &gt;= 0x80 &amp;&amp; *(from + 2) &lt;= 0xBF) {
+                if (*(from + 3) &gt;= 0x80 &amp;&amp; *(from + 3) &lt;= 0xBF) {
+                    read_4();
+                } else {
+                    replace(3);
+                }
+            } else {
+                replace(2);
+            }
+        } else {
+            replace(1);
+        }
+    } else {
+        replace(1);
+    }
+
+    #undef read_1
+    #undef read_2
+    #undef read_3
+    #undef read_4
+    #undef replace
+}
+
+u8_t utf_8_subsequence_reverse(utf_8_subsequence_t* it, const utf_8_t* from, const utf_8_t* first)
+{
+    assert(it);
+    assert(from);
+    assert(first);
+    assert(from &gt; first);
+
+    #define read_1()            \
+    {                           \
+        it-&gt;a = *(from - 1);    \
+        it-&gt;unit_count = 1;     \
+        return 1;               \
+    }
+
+    #define read_2()            \
+    {                           \
+        it-&gt;a = *(from - 2);    \
+        it-&gt;b = *(from - 1);    \
+        it-&gt;unit_count = 2;     \
+        return 2;               \
+    }
+
+    #define read_3()            \
+    {                           \
+        it-&gt;a = *(from - 3);    \
+        it-&gt;b = *(from - 2);    \
+        it-&gt;c = *(from - 1);    \
+        it-&gt;unit_count = 3;     \
+        return 3;               \
+    }
+
+    #define read_4()            \
+    {                           \
+        it-&gt;a = *(from - 4);    \
+        it-&gt;b = *(from - 3);    \
+        it-&gt;c = *(from - 2);    \
+        it-&gt;d = *(from - 1);    \
+        it-&gt;unit_count = 4;     \
+        return 4;               \
+    }
+
+    #define replace(READ_UNIT_COUNT_)   \
+    {                                   \
+        it-&gt;a = 0xEF;                   \
+        it-&gt;b = 0xBF;                   \
+        it-&gt;c = 0xBD;                   \
+        it-&gt;unit_count = 3;             \
+        return READ_UNIT_COUNT_;        \
+    }
+
+    if (*(from - 1) &gt;= 0x00 &amp;&amp; *(from - 1) &lt;= 0x7F) {
+        read_1(); // w[00..7F]
+    } else if (*(from - 1) &gt;= 0x80 &amp;&amp; *(from - 1) &lt;= 0xBF) {
+        if (from - 2 &gt;= first) {
+            if (*(from - 2) &gt;= 0xC2 &amp;&amp; *(from - 2) &lt;= 0xDF) {
+                read_2(); // w[C2..DF, 80..BF]
+            } else if (*(from - 2) &gt;= 0xA0 &amp;&amp; *(from - 2) &lt;= 0xBF) {
+                if (from - 3 &gt;= first) {
+                    if (*(from - 3) == 0xE0) {
+                        read_3(); // w[E0, A0..BF, 80..BF]
+                    }
+                }
+            } else if (*(from - 2) &gt;= 0x80 &amp;&amp; *(from - 2) &lt;= 0xBF) {
+                if (from - 3 &gt;= first) {
+                    if (*(from - 3) &gt;= 0xE1 &amp;&amp; *(from - 3) &lt;= 0xEC) {
+                        read_3(); // w[E1..EC, 80..BF, 80..BF]
+                    } else if (*(from - 3) &gt;= 0xEE &amp;&amp; *(from - 3) &lt;= 0xEF) {
+                        read_3(); // w[EE..EF, 80..BF, 80..BF]
+                    } else if (*(from - 3) &gt;= 0x90 &amp;&amp; *(from - 3) &lt;= 0xBF) {
+                        if (from - 4 &gt;= first) {
+                            if (*(from - 4) == 0xF0) {
+                                read_4(); // w[F0, 90..BF, 80..BF, 80..BF]
+                            }
+                        }
+                    } else if (*(from - 3) &gt;= 0x80 &amp;&amp; *(from - 3) &lt;= 0xBF) {
+                        if (from - 4 &gt;= first) {
+                            if (*(from - 4) &gt;= 0xF1 &amp;&amp; *(from - 4) &lt;= 0xF3) {
+                                read_4(); // w[F1..F3, 80..BF, 80..BF, 80..BF]
+                            }
+                        }
+                    } else if (*(from - 3) &gt;= 0x80 &amp;&amp; *(from - 3) &lt;= 0x8F) {
+                        if (from - 4 &gt;= first) {
+                            if (*(from - 4) == 0xF4) {
+                                read_4(); // w[F4, 80..8F, 80..BF, 80..BF]
+                            }
+                        }
+                    } else if (*(from - 3) &gt;= 0xF1 &amp;&amp; *(from - 3) &lt;= 0xF3) {
+                        replace(3); // i[F1..F3, 80..BF, 80..BF]
+                    }
+                }
+            } else if (*(from - 2) &gt;= 0x80 &amp;&amp; *(from - 2) &lt;= 0x9F) {
+                if (from - 3 &gt;= first) {
+                    if (*(from - 3) == 0xED) {
+                        read_3(); // w[ED, 80..9F, 80..BF]
+                    }
+                }
+            } else if (*(from - 2) &gt;= 0xE1 &amp;&amp; *(from - 2) &lt;= 0xEC) {
+                replace(2); // i[E1..EC, 80..BF]
+            } else if (*(from - 2) &gt;= 0xEE &amp;&amp; *(from - 2) &lt;= 0xEF) {
+                replace(2); // i[EE..EF, 80..BF]
+            } else if (*(from - 2) &gt;= 0xF1 &amp;&amp; *(from - 2) &lt;= 0xF3) {
+                replace(2); // i[F1..F3, 80..BF]
+            } else if (*(from - 2) &gt;= 0x90 &amp;&amp; *(from - 2) &lt;= 0xBF) {
+                if (from - 3 &gt;= first) {
+                    if (*(from - 3) == 0xF0) {
+                        replace(3); // i[F0, 90..BF, 80..BF]
+                    }
+                }
+            } else if (*(from - 2) &gt;= 0x80 &amp;&amp; *(from - 2) &lt;= 0x8F) {
+                if (from - 3 &gt;= first) {
+                    if (*(from - 3) == 0xF4) {
+                        replace(3); // i[F4, 80..8F, 80..BF]
+                    }
+                }
+            }
+        }
+    } else if (*(from - 1) &gt;= 0xA0 &amp;&amp; *(from - 1) &lt;= 0xBF) {
+        if (from - 2 &gt;= first) {
+            if (*(from - 2) == 0xE0) {
+                replace(2); // i[E0, A0..BF]
+            }
+        }
+    } else if (*(from - 1) &gt;= 0x80 &amp;&amp; *(from - 1) &lt;= 0x9F) {
+        if (from - 2 &gt;= first) {
+            if (*(from - 2) == 0xED) {
+                replace(2); // i[ED, 80..9F]
+            }
+        }
+    } else if (*(from - 1) &gt;= 0x90 &amp;&amp; *(from - 1) &lt;= 0xBF) {
+        if (from - 2 &gt;= first) {
+            if (*(from - 2) == 0xF0) {
+                replace(2); // i[F0, 90..BF]
+            }
+        }
+    } else if (*(from - 1) &gt;= 0x80 &amp;&amp; *(from - 1) &lt;= 0x8F) {
+        if (from - 2 &gt;= first) {
+            if (*(from - 2) == 0xF4) {
+                replace(2); // i[F4, 80..8F]
+            }
+        }
+    } else {
+        replace(1); // i[C2..DF], i[E0], i[E1..EC], i[ED], i[EE..EF], i[F0], i[F1..F3], i[F4], i[.]
+    }
+
+    replace(1); // i[.]
+
+    #undef read_1
+    #undef read_2
+    #undef read_3
+    #undef read_4
+    #undef replace
+}
+```
+
+I still need to write some tests for these functions, which is on the agenda. The test suite always lags behind my working code because I don't want to waste time re-writing tests when I haven't finished designing the interface. These function's interfaces are pretty good, but my only qualm with them is that I maybe should write the unit_read_count, or units_read as it's called elsewhere, to an argument rather than a return so that it's understood what it is at a glance.</pre>
 </div>
 <div created="20210617121938299" modified="20210617124317735" tags="Blog C Programming [[Regular Expressions]] Code" title="regex - We now have a string_t.">
 <pre>Yes! I've been working at my C regex library for the past 5 or so days, and in that time I've been developing a custom string_t that can use any unicode encoding, and is expandable to just about every thinkable encoding out there. Its current limitations are three-fold:
