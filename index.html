@@ -1089,6 +1089,8 @@ Error message and password prompt
 
 <li>C</li>
 
+<li>C++20 Library 'nkr'</li>
+
 <li>Cats</li>
 
 <li>Chad Zuber</li>
@@ -1170,6 +1172,8 @@ Error message and password prompt
 <li>Hide Your Quests - Quest Lookup No More!</li>
 
 <li>Historia Civilis</li>
+
+<li>I Now Have Cloud Storage</li>
 
 <li>Is It Legal to Embed YouTube Videos?</li>
 
@@ -1296,6 +1300,8 @@ Error message and password prompt
 <li>Sean McDowell - Beauty Is One of the Best Arguments for God (Here's Why!)</li>
 
 <li>Sean McDowell - The State of Resurrection Research</li>
+
+<li>Sephy Program</li>
 
 <li>Sir Granville Bantock: The Forgotten Man of British Music</li>
 
@@ -12649,7 +12655,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210814092102166" list="$:/ControlPanel Neal [[My Cat Sephy Has Passed]] [[Hide Your Quests]] [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Marty Friedman - Miracle]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Guy Shahar - The Beautiful Reality of Autism]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210814092102166" title="$:/StoryList">
+<div created="20210814092102166" list="[[Sephy Program]] Neal [[My Cat Sephy Has Passed]] [[Hide Your Quests]] [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Marty Friedman - Miracle]] [[Detektivbyrån - Om Du Möter Varg]] [[Sir Granville Bantock: The Forgotten Man of British Music]] [[Programmers And Depression - Jason Humphrey]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Guy Shahar - The Beautiful Reality of Autism]] [[Elon Musk Reveals He Is Autistic]] Autism NexusMods" modified="20210814093103494" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14034,6 +14040,250 @@ He's also a regular on [[Computerphile]]:
 <div created="20210524082003651" modified="20210524082113850" tags="C [[Dennis Ritchie]] Programming" title="C">
 <pre>Only something as amazing as [[The C Programming Language]] could possible deserve its own letter of the alphabet.</pre>
 </div>
+<div created="20210814092240144" modified="20210814093258249" tags="nkr C++ Library Programming Portfolio" title="C++20 Library 'nkr'">
+<pre>Before Sephy started getting really sick, I had just barely started a new C++ project that uses the latest available features of the langauge, concepts. Now that Sephy is resting in peace, I've been getting back into programming and this is one of two projects that I've already spend a good chunk of time on.
+
+Currently, it's aiming to be a cross-platform library as much as possible and to work with 32 bit and 64 bit machines. It has a couple of nifty types already and an what's turning into an extensive test suite that's being build along side it. I'm trying test-driven-development this time. I know some argue against it but one of the things that I really like about it so far is that you really do find problems in your api and logic pretty early on.
+
+I'm really enjoying using concepts, as it makes for programming templates so much easier! You can check out my code at the [ext[GitHub page here.|https://github.com/r-neal-kelly/nkr]]
+
+I'll share the current api of my atomic_t:
+
+```cpp
+namespace nkr {
+
+    template &lt;typename value_p = word_t&gt;
+    class atomic_t
+    {
+    public:
+        using value_t   = value_p;
+
+    private:
+        volatile value_t    value;
+
+    public:
+        atomic_t();
+        atomic_t(value_t value);
+        atomic_t(const atomic_t&amp; other);
+        atomic_t(atomic_t&amp;&amp; other) noexcept;
+        atomic_t&amp; operator =(const atomic_t&amp; other);
+        atomic_t&amp; operator =(atomic_t&amp;&amp; other) noexcept;
+        ~atomic_t();
+
+    public:
+        value_t Access() const;
+
+        template &lt;integral_tr integral_p&gt;
+        value_t Assign(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t Exchange_Assign(integral_p with);
+        template &lt;integral_tr integral_a_p, integral_tr integral_b_p&gt;
+        value_t Exchange_Assign_If_Equals(integral_a_p with, integral_b_p target);
+
+        template &lt;integral_tr integral_p&gt;
+        value_t Add(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t Exchange_Add(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t Subtract(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t Exchange_Subtract(integral_p with);
+
+        template &lt;integral_tr integral_p&gt;
+        value_t Or(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t Exchange_Or(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t And(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t Exchange_And(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t Xor(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t Exchange_Xor(integral_p with);
+
+    public:
+        operator    value_t() const;
+
+    public:
+        value_t operator ()() const;
+
+        template &lt;integral_tr integral_p&gt;
+        value_t operator =(integral_p other);
+
+        template &lt;integral_tr integral_p&gt;
+        value_t operator +(integral_p other) const;
+        template &lt;integral_tr integral_p&gt;
+        value_t operator -(integral_p other) const;
+        template &lt;integral_tr integral_p&gt;
+        value_t operator +=(integral_p other);
+        template &lt;integral_tr integral_p&gt;
+        value_t operator -=(integral_p other);
+        value_t operator ++();
+        value_t operator ++(int);
+        value_t operator --();
+        value_t operator --(int);
+
+        value_t operator ~() const;
+        template &lt;integral_tr integral_p&gt;
+        value_t operator |(integral_p other) const;
+        template &lt;integral_tr integral_p&gt;
+        value_t operator &amp;(integral_p other) const;
+        template &lt;integral_tr integral_p&gt;
+        value_t operator ^(integral_p other) const;
+        template &lt;integral_tr integral_p&gt;
+        value_t operator |=(integral_p other);
+        template &lt;integral_tr integral_p&gt;
+        value_t operator &amp;=(integral_p other);
+        template &lt;integral_tr integral_p&gt;
+        value_t operator ^=(integral_p other);
+
+    public:
+        static_assert(std::is_integral&lt;value_t&gt;::value &amp;&amp;
+                      (sizeof(value_t) &lt;= sizeof(word_t)),
+                      &quot;invalid atomic value_t.&quot;);
+    };
+
+    template &lt;&gt;
+    class atomic_t&lt;bool_t&gt;
+    {
+    public:
+        using value_t   = bool_t;
+
+    private:
+        volatile value_t    value;
+
+    public:
+        atomic_t();
+        atomic_t(value_t value);
+        atomic_t(const atomic_t&amp; other);
+        atomic_t(atomic_t&amp;&amp; other) noexcept;
+        atomic_t&amp; operator =(const atomic_t&amp; other);
+        atomic_t&amp; operator =(atomic_t&amp;&amp; other) noexcept;
+        ~atomic_t();
+
+    public:
+        value_t Access() const;
+
+        value_t Assign(value_t with);
+        value_t Exchange_Assign(value_t with);
+        value_t Exchange_Assign_If_Equals(value_t with, value_t target);
+
+    public:
+        operator    value_t() const;
+
+    public:
+        value_t operator ()() const;
+
+        value_t operator =(value_t other);
+    };
+
+    template &lt;typename value_p&gt;
+    class atomic_t&lt;value_p*&gt;
+    {
+    public:
+        using value_t   = value_p;
+
+    private:
+        value_t* volatile   value;
+
+    public:
+        atomic_t();
+        atomic_t(value_t* value);
+        atomic_t(const atomic_t&amp; other);
+        atomic_t(atomic_t&amp;&amp; other) noexcept;
+        atomic_t&amp; operator =(const atomic_t&amp; other);
+        atomic_t&amp; operator =(atomic_t&amp;&amp; other) noexcept;
+        ~atomic_t();
+
+    public:
+        value_t*    Access() const;
+
+        template &lt;pointer_tr pointer_p&gt;
+        value_t*    Assign(pointer_p with);
+        template &lt;pointer_tr pointer_p&gt;
+        value_t*    Exchange_Assign(pointer_p with);
+        template &lt;pointer_tr pointer_a_p, pointer_tr pointer_b_p&gt;
+        value_t*    Exchange_Assign_If_Equals(pointer_a_p with, pointer_b_p target);
+
+        template &lt;integral_tr integral_p&gt;
+        value_t*    Add(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t*    Exchange_Add(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t*    Subtract(integral_p with);
+        template &lt;integral_tr integral_p&gt;
+        value_t*    Exchange_Subtract(integral_p with);
+
+    public:
+        operator    value_t*() const;
+
+    public:
+        value_t*    operator ()() const;
+
+        template &lt;pointer_tr pointer_p&gt;
+        value_t*    operator =(pointer_p other);
+
+        template &lt;integral_tr integral_p&gt;
+        value_t*    operator +(integral_p other) const;
+        template &lt;integral_tr integral_p&gt;
+        value_t*    operator -(integral_p other) const;
+        template &lt;integral_tr integral_p&gt;
+        value_t*    operator +=(integral_p other);
+        template &lt;integral_tr integral_p&gt;
+        value_t*    operator -=(integral_p other);
+        value_t*    operator ++();
+        value_t*    operator ++(int);
+        value_t*    operator --();
+        value_t*    operator --(int);
+
+        value_t*    operator -&gt;() const;
+        value_t&amp;    operator *() const;
+        template &lt;integral_tr integral_p&gt;
+        value_t&amp;    operator [](integral_p index) const;
+    };
+
+    template &lt;&gt;
+    class atomic_t&lt;void_t*&gt;
+    {
+    public:
+        using value_t   = void_t;
+
+    private:
+        value_t* volatile   value;
+
+    public:
+        atomic_t();
+        atomic_t(value_t* value);
+        atomic_t(const atomic_t&amp; other);
+        atomic_t(atomic_t&amp;&amp; other) noexcept;
+        atomic_t&amp; operator =(const atomic_t&amp; other);
+        atomic_t&amp; operator =(atomic_t&amp;&amp; other) noexcept;
+        ~atomic_t();
+
+    public:
+        value_t*    Access() const;
+
+        template &lt;pointer_tr pointer_p&gt;
+        value_t*    Assign(pointer_p with);
+        template &lt;pointer_tr pointer_p&gt;
+        value_t*    Exchange_Assign(pointer_p with);
+        template &lt;pointer_tr pointer_a_p, pointer_tr pointer_b_p&gt;
+        value_t*    Exchange_Assign_If_Equals(pointer_a_p with, pointer_b_p target);
+
+    public:
+        operator    value_t*() const;
+
+    public:
+        value_t*    operator ()() const;
+
+        template &lt;pointer_tr pointer_p&gt;
+        value_t*    operator =(pointer_p other);
+    };
+
+}
+```</pre>
+</div>
 <div created="20210524013406015" modified="20210524032737298" tags="Cats" title="Cats">
 <pre>I'm a big fan of cats. Just thought you'd want to know!</pre>
 </div>
@@ -14267,6 +14517,9 @@ You can also check out my other works:
 {{$:/Historia Civilis/The Assassination of Julius Caesar (The Ides of March, 44 B.C.E.)}}
 
 {{$:/Historia Civilis/The Bronze Age Collapse (approximately 1200 B.C.E.)}}</pre>
+</div>
+<div created="20210814093542780" modified="20210814093856168" tags="Cloud Storage Music Cats Picture Video" title="I Now Have Cloud Storage">
+<pre>I was gifted some money recently right after I got my new debit card, and I used a portion of it to get some cloud space for a year. I've put up all of my videos and pictures of Sephy to hopefully help safe-keep them. I also added pictures and videos of my Aunt Kim's cats and I even uploaded my own music. I've been listening to it recently and some of it's pretty good, it surprises me. Oh! How could I forget? I also uploaded some of my family photos, although I need to upload more.</pre>
 </div>
 <div created="20210525045636371" modified="20210525045808018" tags="YouTube" title="Is It Legal to Embed YouTube Videos?">
 <pre>[[I thought this was a great blog post|https://blogpros.com/blog/2018/12/legal-embed-youtube-blog]].</pre>
@@ -15450,6 +15703,91 @@ Anyway, that's the blog entry for today.</pre>
 <pre>I thought this was a great talk that outlines some of the best evidences for the Resurrection of Christ. I'm particularly interested in the near-death experiences which are not necessarily Christian, but do point to something after death. Kind of hard to ignore!:
 
 {{||$:/neal/youtube_video}}</pre>
+</div>
+<div created="20210814093906157" modified="20210814094521552" tags="Sephy Programming Electron JavaScript Node.js Desktop Picture Portfolio" title="Sephy Program">
+<pre>I created a picture viewer in honor of my recently passed cat Sephy. [ext[You can find it on GitHub here.|https://github.com/r-neal-kelly/sephy]]
+
+It's still a work in progress in terms of the code, but it does have all of Sephy's pictures in the release version 1.1.0. I wrote part of the program in such a way that I should be able to make it into a single-page application openable on the web browser, and I can use my cloud storage to link to her photos as I also have them stored there.
+
+Here is a snippet from the main process in Electron, which reads a directory and stores data on all files, even following shortcuts and symlinks:
+
+```js
+class File_t {
+    path;
+    name;
+    extension;
+
+    constructor(root_folder_path, relative_file_path) {
+        root_folder_path = path.resolve(root_folder_path);
+        const absolute_file_path = path.resolve(path.join(root_folder_path, relative_file_path));
+        const path_info = path.parse(absolute_file_path);
+
+        this.path = relative_file_path.replaceAll(&quot;\\&quot;, &quot;/&quot;);
+        this.name = path_info.name;
+        this.extension = path_info.ext;
+    }
+};
+
+class Folder_t {
+    path;
+    name;
+    folders;
+    files;
+
+    constructor(root_folder_path, relative_folder_path) {
+        root_folder_path = path.resolve(root_folder_path);
+        const absolute_folder_path = path.resolve(path.join(root_folder_path, relative_folder_path));
+
+        this.path = relative_folder_path.replaceAll(&quot;\\&quot;, &quot;/&quot;);
+        this.name = path.parse(absolute_folder_path).name;
+        this.folders = [];
+        this.files = [];
+
+        if (fs.existsSync(absolute_folder_path)) {
+            const contents = fs.readdirSync(absolute_folder_path, { withFileTypes: true });
+            for (let content of contents) {
+                if (content.isDirectory()) {
+                    this.folders.push(new Folder_t(root_folder_path, `${relative_folder_path}/${content.name}`));
+                } else if (content.isFile()) {
+                    try {
+                        const absolute_shortcut_path = path.resolve(
+                            shell.readShortcutLink(`${absolute_folder_path}/${content.name}`).target
+                        );
+                        const stats = fs.statSync(absolute_shortcut_path);
+                        if (stats.isDirectory()) {
+                            this.folders.push(
+                                new Folder_t(root_folder_path, path.relative(root_folder_path, absolute_shortcut_path))
+                            );
+                        } else if (stats.isFile()) {
+                            this.files.push(
+                                new File_t(root_folder_path, path.relative(root_folder_path, absolute_shortcut_path))
+                            );
+                        }
+                    } catch {
+                        this.files.push(
+                            new File_t(root_folder_path, `${relative_folder_path}/${content.name}`)
+                        );
+                    }
+                } else if (content.isSymbolicLink()) {
+                    const absolute_symbolic_path = path.resolve(
+                        fs.realpathSync(fs.readlinkSync(`${absolute_folder_path}/${content.name}`))
+                    );
+                    const stats = fs.statSync(absolute_symbolic_path);
+                    if (stats.isDirectory()) {
+                        this.folders.push(
+                            new Folder_t(root_folder_path, path.relative(root_folder_path, absolute_symbolic_path))
+                        );
+                    } else if (stats.isFile()) {
+                        this.files.push(
+                            new File_t(root_folder_path, path.relative(root_folder_path, absolute_symbolic_path))
+                        );
+                    }
+                }
+            }
+        }
+    }
+};
+```</pre>
 </div>
 <div created="20210602230904713" modified="20210602232240630" tags="Video Bantock Impressionism English British Music Recommended" title="Sir Granville Bantock: The Forgotten Man of British Music" youtube_id="YqpgjQE1GWQ">
 <pre>I'm elated to see a documentary about my favorite [[musical composer of Impressionism|Bantock]]! If you've never heard Bantock's music, I highly recommend checking it out, it's like finding a hidden treasure that was waiting for you all these years:
