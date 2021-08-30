@@ -1105,6 +1105,8 @@ Error message and password prompt
 
 <li>CppCon 2014 - Mike Acton - Data Oriented Design and C++</li>
 
+<li>Current Project</li>
+
 <li>Dabbling in Rust</li>
 
 <li>Data Oriented Programming</li>
@@ -12653,7 +12655,7 @@ Error message and password prompt
 <div title="$:/status/RequireReloadDueToPluginChange">
 <pre>no</pre>
 </div>
-<div created="20210819203018148" list="Neal [[My Cat Sephy Has Passed]] NexusMods [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Detektivbyrån - Om Du Möter Varg]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Guy Shahar - The Beautiful Reality of Autism]] Autism" modified="20210819203018148" title="$:/StoryList">
+<div created="20210830174746799" list="[[Current Project]] Neal [[My Cat Sephy Has Passed]] NexusMods [[Mozart - Iceland Symphony Orchestra - Clarinet Concerto in A major, K.622]] [[Detektivbyrån - Om Du Möter Varg]] [[Dennis Ritchie]] [[CppCon 2014 - Mike Acton - Data Oriented Design and C++]] [[Guy Shahar - The Beautiful Reality of Autism]] Autism" modified="20210830174746799" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20210528152618659" modified="20210528152733002" tags="$:/ Synthwave Directory" title="$:/Synthwave">
@@ -14320,6 +14322,19 @@ namespace nkr {
 <pre>I really appreciate this game developer's perspective on the subject. His depiction of the difference in speed between accessing data on the the various caches and accessing data in main memory is pretty elucidating.
 
 {{||$:/neal/youtube_video}}</pre>
+</div>
+<div created="20210830174749387" modified="20210830175534983" tags="C++ Portfolio nkr" title="Current Project">
+<pre>Currently I'm working on my new C++20 library called nkr that encapsulates a lot of what I learned when creating a previous project called Skylib. The big difference between this library and my old library is that I'm documenting and testing everything as fully as I can. This is actually a new skill-set I'm developing because I've never done this to this degree before. I'm learning quite a bit as I go and I think that it's paying off. My code is now more resilient, easier to use, and better designed overall thanks to these new practices I'm committing to. The trade-off is that it takes more time to document and test these new features, but it seems to be well worth it so far.
+
+Here is an example of the kind of code I'm writing. These four files cover my custom `bool_t`, which is a relatively simple abstraction of the built-in `bool` keyword. Essentially, it provides guarantees that the C++ standard doesn't, and also a legitimate boolean as compared to the pseudo-integer standard `bool`:
+
+[[declaration|https://github.com/r-neal-kelly/nkr/blob/master/nkr/include/nkr/bool_t.h]]
+
+[[definition|https://github.com/r-neal-kelly/nkr/blob/master/nkr/include/nkr/bool_t.inl]]
+
+[[documentation|https://github.com/r-neal-kelly/nkr/blob/master/nkr/include/nkr/bool_t.dox]]
+
+[[tests|https://github.com/r-neal-kelly/nkr/blob/master/nkr_test/src/bool_t.cpp]]</pre>
 </div>
 <div created="20210620161222238" modified="20210620162838500" tags="Rust Programming Blog" title="Dabbling in Rust">
 <pre>I've been dabbling a bit in Rust, learning the syntax. I think it's great so far. The main selling point for me is that it offers a new way to manage memory without introducing a garbage collector, which is simply unacceptable to me and most programmers who work low level. I'm very interested in trying it out, and I'm very much enjoying the language as a whole so far. It kind of feels like a lower level JavaScript to be honest.
